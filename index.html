@@ -375,4 +375,116 @@
         case "yellow":
           tag = "ENERGY · JOY";
           emotion = "에너지와 재미를 찾는 상태";
-          description = "하루에 활력을 더
+          description = "하루에 활력을 더 넣고 싶거나, 가벼운 즐거움을 찾는 밝은 톤의 상태입니다.";
+          coffee = "밝은 산미의 싱글오리진 필터커피";
+          tea = "레몬 허니티";
+          break;
+        case "orange":
+          tag = "SOCIAL · WARM";
+          emotion = "사람과의 대화·교류를 원하는 상태";
+          description = "혼자 있는 것보다는 주변 사람과 가볍게 섞이고 싶은 따뜻한 에너지의 날입니다.";
+          coffee = "카라멜 라떼";
+          tea = "복숭아 향 홍차";
+          break;
+        case "red":
+          tag = "ALERT · INTENSE";
+          emotion = "각성이 높거나, 약간의 긴장과 압박이 섞인 상태";
+          description = "감정 에너지가 강하게 올라온 상태일 수 있고, 집중·스트레스가 함께 존재할 수도 있습니다.";
+          coffee = "더블 에스프레소";
+          tea = "생강 레몬티";
+          break;
+        case "purple":
+          tag = "DEEP · SENSITIVE";
+          emotion = "사유와 감성이 깊어진 상태";
+          description = "내향적으로 생각이 깊어지거나, 예술적·감성적인 상태에 가까운 날입니다.";
+          coffee = "다크 초콜릿 노트의 라떼";
+          tea = "얼그레이 라벤더 티";
+          break;
+        case "black":
+          tag = "PROTECT · RESET";
+          emotion = "과부하 또는 자기 보호가 필요한 상태";
+          description = "에너지가 많이 소진됐거나, 조용한 보호막이 필요해서 스스로를 지키고 싶은 마음이 느껴집니다.";
+          coffee = "디카페인 플랫 화이트";
+          tea = "루이보스 바닐라 티";
+          break;
+        case "white":
+          tag = "RESET · LIGHT";
+          emotion = "정리·리셋·새 출발을 원하는 상태";
+          description = "머릿속을 가볍게 비우고, 다시 정돈된 상태로 시작하고 싶은 마음이 있는 날입니다.";
+          coffee = "담백한 무가당 라떼";
+          tea = "가벼운 화이트 티 또는 연한 녹차";
+          break;
+      }
+
+      let tuneNote = "";
+      if (shapeType === "soft") {
+        tuneNote = "오늘은 자극보다는 부드러운 밸런스를 조금 더 강조해 주세요. 텍스처를 매끄럽게 가져가는 쪽이 좋습니다.";
+      } else if (shapeType === "stable") {
+        tuneNote = "맛의 구조가 분명하게 느껴지도록 산미·단맛·바디의 균형을 또렷하게 나눠 주면 좋습니다.";
+      } else if (shapeType === "dynamic") {
+        tuneNote = "한 지점(산미, 단맛, 향) 정도는 조금 더 과감하게 강조해 주면, 기억에 남는 한 컵이 되기 좋습니다.";
+      }
+
+      const baristaHint =
+        "바리스타 메모: 손님의 선택은 언어가 아니라 감각에서 나온 것이므로, 오늘 컨디션을 한 번 더 가볍게 물어본 뒤 강도(카페인·온도·당도)를 조정해 주세요.";
+
+      return { tag, emotion, description, coffee, tea, tuneNote, baristaHint };
+    }
+
+    function renderResult(result) {
+      resultCard.innerHTML = "";
+
+      const tagEl = document.createElement("div");
+      tagEl.className = "result-tag";
+      tagEl.textContent = result.tag;
+
+      const emotionEl = document.createElement("div");
+      emotionEl.className = "result-emotion";
+      emotionEl.textContent = result.emotion;
+
+      const descEl = document.createElement("div");
+      descEl.className = "result-text";
+      descEl.textContent = result.description;
+
+      const coffeeTitle = document.createElement("div");
+      coffeeTitle.className = "result-subtitle";
+      coffeeTitle.textContent = "오늘 추천 커피";
+
+      const coffeeText = document.createElement("div");
+      coffeeText.className = "result-text";
+      coffeeText.textContent = "· " + result.coffee;
+
+      const teaTitle = document.createElement("div");
+      teaTitle.className = "result-subtitle";
+      teaTitle.textContent = "오늘 추천 차 (TEA)";
+
+      const teaText = document.createElement("div");
+      teaText.className = "result-text";
+      teaText.textContent = "· " + result.tea;
+
+      const tuneTitle = document.createElement("div");
+      tuneTitle.className = "result-subtitle";
+      tuneTitle.textContent = "형태 선택으로 읽히는 추가 톤";
+
+      const tuneText = document.createElement("div");
+      tuneText.className = "result-text";
+      tuneText.textContent = result.tuneNote;
+
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      meta.textContent = result.baristaHint;
+
+      resultCard.appendChild(tagEl);
+      resultCard.appendChild(emotionEl);
+      resultCard.appendChild(descEl);
+      resultCard.appendChild(coffeeTitle);
+      resultCard.appendChild(coffeeText);
+      resultCard.appendChild(teaTitle);
+      resultCard.appendChild(teaText);
+      resultCard.appendChild(tuneTitle);
+      resultCard.appendChild(tuneText);
+      resultCard.appendChild(meta);
+    }
+  </script>
+</body>
+</html>
