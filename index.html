@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>감정 기반 커피 추천 – Material Studio</title>
+  <title>오늘의 감정 기반 커피 · 차 추천</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
@@ -47,8 +47,9 @@
     }
     .grid {
       display: grid;
-      gap: 10px;
+      gap: 14px;
       margin-bottom: 18px;
+      justify-items: center;
     }
     .grid.colors {
       grid-template-columns: repeat(4, 1fr);
@@ -58,25 +59,16 @@
     }
     button.option {
       border: none;
-      border-radius: 14px;
-      padding: 10px 8px;
-      font-size: 12px;
-      font-weight: 500;
+      border-radius: 18px;
+      padding: 12px;
       background: #262626;
-      color: #f5f5f5;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      gap: 6px;
       cursor: pointer;
       transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease, outline 0.12s ease;
-    }
-    button.option span.label {
-      font-size: 12px;
-    }
-    button.option span.caption {
-      font-size: 10px;
-      color: #bbbbbb;
+      width: 72px;
+      height: 72px;
     }
     button.option.selected {
       outline: 2px solid #ffffff;
@@ -85,57 +77,54 @@
       background: #303030;
     }
     .color-circle {
-      width: 22px;
-      height: 22px;
+      width: 40px;
+      height: 40px;
       border-radius: 999px;
-      border: 1px solid rgba(0,0,0,0.3);
+      border: 1px solid rgba(0,0,0,0.35);
     }
     .shape-icon {
-      width: 26px;
-      height: 26px;
+      width: 40px;
+      height: 40px;
       position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .shape-circle {
-      width: 22px;
-      height: 22px;
+      width: 30px;
+      height: 30px;
       border-radius: 999px;
       border: 2px solid #f5f5f5;
-      margin: auto;
     }
     .shape-square {
-      width: 20px;
-      height: 20px;
+      width: 28px;
+      height: 28px;
       border: 2px solid #f5f5f5;
-      margin: auto;
     }
     .shape-triangle {
       width: 0;
       height: 0;
-      border-left: 11px solid transparent;
-      border-right: 11px solid transparent;
-      border-bottom: 20px solid #f5f5f5;
-      margin: auto;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-bottom: 28px solid #f5f5f5;
     }
     .shape-curve {
-      width: 22px;
-      height: 22px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       border: 2px solid transparent;
       border-top-color: #f5f5f5;
       border-right-color: #f5f5f5;
-      margin: auto;
       transform: rotate(20deg);
     }
     .shape-line {
-      width: 22px;
+      width: 30px;
       height: 2px;
       background: #f5f5f5;
-      margin: auto;
     }
     .shape-irregular {
-      width: 18px;
-      height: 18px;
-      margin: auto;
+      width: 26px;
+      height: 26px;
       border-radius: 40% 65% 35% 70%;
       border: 2px solid #f5f5f5;
       transform: rotate(-12deg);
@@ -202,15 +191,7 @@
       font-size: 11px;
       color: #999;
       margin-bottom: 4px;
-    }
-    .coffee-list {
-      font-size: 12px;
-      color: #f5f5f5;
-      margin-left: 10px;
-      margin-bottom: 8px;
-    }
-    .coffee-list li {
-      margin-bottom: 2px;
+      margin-top: 2px;
     }
     .meta {
       font-size: 10px;
@@ -221,26 +202,29 @@
 </head>
 <body>
   <div class="app">
-    <div class="title">오늘의 감정 기반 커피 추천</div>
-    <div class="subtitle">색과 형태를 통해 지금 상태를 선택하면, 바리스타가 어울리는 커피를 제안합니다.</div>
+    <div class="title">오늘의 감정 기반 추천</div>
+    <div class="subtitle">지금 끌리는 색과 형태를 고르면, 오늘의 상태에 맞는 커피와 차를 제안합니다.</div>
 
+    <!-- STEP 1: COLOR -->
     <div id="step-color">
       <div class="section-label">Step 1</div>
-      <div class="question">오늘 가장 끌리는 색을 선택해 주세요.</div>
+      <div class="question">오늘 지금, 가장 끌리는 색을 하나 눌러 주세요.</div>
       <div class="grid colors" id="color-grid"></div>
     </div>
 
+    <!-- STEP 2: SHAPE -->
     <div id="step-shape" style="display:none;">
       <div class="section-label">Step 2</div>
-      <div class="question">지금 마음에 가장 가까운 형태를 골라보세요.</div>
+      <div class="question">이번에는 지금 마음과 가장 비슷한 형태를 골라 주세요.</div>
       <div class="grid shapes" id="shape-grid"></div>
 
       <div class="actions">
         <button class="btn secondary" id="back-to-color">이전</button>
-        <button class="btn primary" id="show-result">추천 보기</button>
+        <button class="btn primary" id="show-result">결과 보기</button>
       </div>
     </div>
 
+    <!-- RESULT -->
     <div id="result-section" style="display:none;">
       <div class="section-label">Result</div>
       <div class="question">오늘의 감정 리포트</div>
@@ -253,26 +237,26 @@
   </div>
 
   <script>
-    // 색상 정의
+    // 색상 정의 (선택 화면에서는 텍스트를 전혀 보여주지 않음)
     const colors = [
-      { id: "blue",   label: "파랑",  caption: "차분 · 명료",  css: "#3A7BFF" },
-      { id: "green",  label: "초록",  caption: "회복 · 균형",  css: "#39B37F" },
-      { id: "yellow", label: "노랑",  caption: "에너지 · 희망", css: "#F6C945" },
-      { id: "orange", label: "주황",  caption: "소통 · 활발",  css: "#F48A3C" },
-      { id: "red",    label: "빨강",  caption: "각성 · 열정",  css: "#E94444" },
-      { id: "purple", label: "보라",  caption: "사유 · 감성",  css: "#A463E8" },
-      { id: "black",  label: "검정",  caption: "보호 · 과부하", css: "#111111" },
-      { id: "white",  label: "흰색",  caption: "정리 · 리셋",  css: "#f5f5f5" },
+      { id: "blue",   css: "#3A7BFF" },
+      { id: "green",  css: "#39B37F" },
+      { id: "yellow", css: "#F6C945" },
+      { id: "orange", css: "#F48A3C" },
+      { id: "red",    css: "#E94444" },
+      { id: "purple", css: "#A463E8" },
+      { id: "black",  css: "#111111" },
+      { id: "white",  css: "#f5f5f5" },
     ];
 
-    // 도형 정의
+    // 도형 정의 (선택 화면에서 텍스트 없음)
     const shapes = [
-      { id: "circle",    label: "원",     caption: "포용 · 조화",   type: "soft" },
-      { id: "square",    label: "사각형", caption: "구조 · 안정",   type: "stable" },
-      { id: "triangle",  label: "삼각형", caption: "변화 · 에너지", type: "dynamic" },
-      { id: "curve",     label: "곡선",   caption: "부드러움",      type: "soft" },
-      { id: "line",      label: "직선",   caption: "명확 · 단호",   type: "stable" },
-      { id: "irregular", label: "불규칙", caption: "복합 감정",     type: "dynamic" },
+      { id: "circle",    type: "soft" },
+      { id: "square",    type: "stable" },
+      { id: "triangle",  type: "dynamic" },
+      { id: "curve",     type: "soft" },
+      { id: "line",      type: "stable" },
+      { id: "irregular", type: "dynamic" },
     ];
 
     let selectedColor = null;
@@ -295,24 +279,13 @@
       circle.className = "color-circle";
       circle.style.background = color.css;
 
-      const label = document.createElement("span");
-      label.className = "label";
-      label.textContent = color.label;
-
-      const caption = document.createElement("span");
-      caption.className = "caption";
-      caption.textContent = color.caption;
-
       btn.appendChild(circle);
-      btn.appendChild(label);
-      btn.appendChild(caption);
 
       btn.addEventListener("click", () => {
         selectedColor = color.id;
-        // 선택 표시
         [...colorGrid.children].forEach(c => c.classList.remove("selected"));
         btn.classList.add("selected");
-        // 다음 단계로 자동 이동
+        // 자동으로 다음 단계로 이동
         stepColor.style.display = "none";
         stepShape.style.display = "block";
       });
@@ -333,17 +306,7 @@
       inner.className = "shape-" + shape.id;
       icon.appendChild(inner);
 
-      const label = document.createElement("span");
-      label.className = "label";
-      label.textContent = shape.label;
-
-      const caption = document.createElement("span");
-      caption.className = "caption";
-      caption.textContent = shape.caption;
-
       btn.appendChild(icon);
-      btn.appendChild(label);
-      btn.appendChild(caption);
 
       btn.addEventListener("click", () => {
         selectedShape = shape.id;
@@ -360,10 +323,10 @@
       stepColor.style.display = "block";
     });
 
-    // 추천 보기
+    // 결과 보기
     document.getElementById("show-result").addEventListener("click", () => {
       if (!selectedColor || !selectedShape) {
-        alert("색과 형태를 모두 선택해 주세요.");
+        alert("색과 형태를 모두 하나씩 선택해 주세요.");
         return;
       }
       const result = computeRecommendation(selectedColor, selectedShape);
@@ -383,137 +346,33 @@
       stepColor.style.display = "block";
     });
 
-    // 감정 & 커피 추천 로직
+    // 감정 & 커피/차 추천 로직
     function computeRecommendation(colorId, shapeId) {
       const shapeMeta = shapes.find(s => s.id === shapeId);
       const shapeType = shapeMeta ? shapeMeta.type : "soft";
 
-      // 1차: 색상 기반 감정 & 베이스 추천
+      let tag = "";
       let emotion = "";
       let description = "";
-      let baseCoffee = [];
-      let tag = "";
+      let coffee = "";
+      let tea = "";
 
       switch (colorId) {
         case "blue":
-          emotion = "차분함과 생각이 많은 상태";
-          description = "머릿속에 생각이 많지만, 크게 요동치지 않고 정리하고 싶은 마음이 강한 상태입니다.";
-          baseCoffee = ["클린한 필터커피 (워시드, 산미 중간)", "너트/우드 노트 라떼"];
           tag = "CALM · CLEAR";
+          emotion = "차분함과 정리가 필요해 보이는 상태";
+          description = "머릿속에 생각이 많지만, 크게 요동치지 않고 정리하고 싶은 마음이 있는 날입니다.";
+          coffee = "클린 워시드 싱글오리진 필터커피";
+          tea = "은은한 재스민 티";
           break;
         case "green":
-          emotion = "회복과 균형을 원하는 상태";
-          description = "몸과 마음의 피로를 내려놓고, 다시 균형을 찾고 싶은 회복 모드입니다.";
-          baseCoffee = ["따뜻한 라떼 (저산미, 고소함 중심)", "부드러운 콜드브루"];
           tag = "RECOVER · BALANCE";
+          emotion = "회복과 균형을 원하는 상태";
+          description = "몸과 마음 에너지가 조금 내려간 상태에서, 다시 균형을 회복하고 싶은 마음이 느껴집니다.";
+          coffee = "고소한 미디엄 라떼";
+          tea = "캐모마일 허브티";
           break;
         case "yellow":
-          emotion = "에너지와 재미를 찾는 상태";
-          description = "조금 들뜬 기분이거나, 오늘 하루에 활력을 더 넣고 싶어합니다.";
-          baseCoffee = ["밝은 산미 싱글오리진 필터", "에스프레소 토닉"];
           tag = "ENERGY · JOY";
-          break;
-        case "orange":
-          emotion = "사람·대화·활발한 교류를 원하는 상태";
-          description = "혼자 있기보단, 주변과 가볍게 소통하고 싶은 마음이 강한 상태입니다.";
-          baseCoffee = ["밸런스 좋은 블렌드 라떼", "카라멜/너트 노트 메뉴"];
-          tag = "SOCIAL · WARM";
-          break;
-        case "red":
-          emotion = "강한 각성 또는 스트레스가 있는 상태";
-          description = "감정 에너지가 높거나, 압박감·긴장감이 섞인 상태일 수 있습니다.";
-          baseCoffee = ["짧은 에스프레소", "산미·바디가 강한 싱글오리진"];
-          tag = "ALERT · INTENSE";
-          break;
-        case "purple":
-          emotion = "사유와 감성이 깊어진 상태";
-          description = "생각이 안쪽으로 깊어졌거나, 예술적·감성적 상태에 가깝습니다.";
-          baseCoffee = ["복합 향미가 있는 싱글오리진", "다크 초콜릿 노트 라떼"];
-          tag = "DEEP · SENSITIVE";
-          break;
-        case "black":
-          emotion = "과부하 또는 자기 보호가 필요한 상태";
-          description = "에너지가 많이 소진됐거나, 조용히 스스로를 보호하고 싶은 심리입니다.";
-          baseCoffee = ["저카페인/디카페인 라떼", "부드러운 저산미 콜드브루"];
-          tag = "PROTECT · RESET";
-          break;
-        case "white":
-          emotion = "정리·리셋·새 출발을 원하는 상태";
-          description = "머릿속을 가볍게 비우고, 다시 정돈된 상태로 시작하고 싶어합니다.";
-          baseCoffee = ["클린 워시드 필터", "담백한 라떼 (단맛 최소)"];
-          tag = "RESET · LIGHT";
-          break;
-      }
-
-      // 2차: 도형(형태)로 미세 튜닝
-      let tuneNote = "";
-      if (shapeType === "soft") {
-        tuneNote = "오늘은 자극보다는 부드러운 밸런스를 조금 더 강조해 주세요. 텍스처를 매끄럽게 가져가는 쪽이 좋습니다.";
-      } else if (shapeType === "stable") {
-        tuneNote = "맛의 구조가 분명하게 느껴지도록 산미·단맛·바디의 균형을 또렷하게 나눠 주면 좋습니다.";
-      } else if (shapeType === "dynamic") {
-        tuneNote = "조금 더 강한 포인트(산미, 단맛, 향) 중 하나를 강조해서 기억에 남는 한 지점을 만들어 주면 좋습니다.";
-      }
-
-      const baristaHint =
-        "바리스타 메모: " +
-        (colorId === "red" || colorId === "yellow"
-          ? "카페인·산미 허용도가 높은 편일 가능성이 있습니다. 다만 컨디션을 한 번 더 가볍게 물어봐 주세요."
-          : colorId === "black"
-          ? "심리적 피로 가능성이 있어, 카페인 강도와 산미를 낮추는 쪽이 안전합니다."
-          : "맛의 방향성에 공감해 주면서, 오늘 컨디션에 맞는 강도만 가볍게 확인해 주세요.");
-
-      return { tag, emotion, description, baseCoffee, tuneNote, baristaHint };
-    }
-
-    function renderResult(result) {
-      resultCard.innerHTML = "";
-
-      const tagEl = document.createElement("div");
-      tagEl.className = "result-tag";
-      tagEl.textContent = result.tag;
-
-      const emotionEl = document.createElement("div");
-      emotionEl.className = "result-emotion";
-      emotionEl.textContent = result.emotion;
-
-      const descEl = document.createElement("div");
-      descEl.className = "result-text";
-      descEl.textContent = result.description;
-
-      const coffeeTitle = document.createElement("div");
-      coffeeTitle.className = "result-subtitle";
-      coffeeTitle.textContent = "오늘 어울리는 커피 제안";
-
-      const coffeeList = document.createElement("ul");
-      coffeeList.className = "coffee-list";
-      result.baseCoffee.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = "· " + item;
-        coffeeList.appendChild(li);
-      });
-
-      const tuneTitle = document.createElement("div");
-      tuneTitle.className = "result-subtitle";
-      tuneTitle.textContent = "추가 감정 톤 (형태 기반)";
-
-      const tuneText = document.createElement("div");
-      tuneText.className = "result-text";
-      tuneText.textContent = result.tuneNote;
-
-      const meta = document.createElement("div");
-      meta.className = "meta";
-      meta.textContent = result.baristaHint;
-
-      resultCard.appendChild(tagEl);
-      resultCard.appendChild(emotionEl);
-      resultCard.appendChild(descEl);
-      resultCard.appendChild(coffeeTitle);
-      resultCard.appendChild(coffeeList);
-      resultCard.appendChild(tuneTitle);
-      resultCard.appendChild(tuneText);
-      resultCard.appendChild(meta);
-    }
-  </script>
-</body>
-</html>
+          emotion = "에너지와 재미를 찾는 상태";
+          description = "하루에 활력을 더
