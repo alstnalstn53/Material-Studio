@@ -1,490 +1,803 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>오늘의 감정 기반 커피 · 차 추천</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body {
-      background: #111;
-      color: #f5f5f5;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
-    .app {
-      width: 100%;
-      max-width: 480px;
-      background: #181818;
-      border-radius: 24px;
-      padding: 24px 20px 28px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-    }
-    .title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .subtitle {
-      font-size: 13px;
-      color: #aaaaaa;
-      margin-bottom: 16px;
-    }
-    .question {
-      font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 16px;
-    }
-    .section-label {
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #888;
-      margin-bottom: 6px;
-    }
-    .grid {
-      display: grid;
-      gap: 14px;
-      margin-bottom: 18px;
-      justify-items: center;
-    }
-    .grid.colors {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    .grid.shapes {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    button.option {
-      border: none;
-      border-radius: 18px;
-      padding: 12px;
-      background: #262626;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease, outline 0.12s ease;
-      width: 72px;
-      height: 72px;
-    }
-    button.option.selected {
-      outline: 2px solid #ffffff;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.2);
-      transform: translateY(-1px);
-      background: #303030;
-    }
-    .color-circle {
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      border: 1px solid rgba(0,0,0,0.35);
-    }
-    .shape-icon {
-      width: 40px;
-      height: 40px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .shape-circle {
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      border: 2px solid #f5f5f5;
-    }
-    .shape-square {
-      width: 28px;
-      height: 28px;
-      border: 2px solid #f5f5f5;
-    }
-    .shape-triangle {
-      width: 0;
-      height: 0;
-      border-left: 16px solid transparent;
-      border-right: 16px solid transparent;
-      border-bottom: 28px solid #f5f5f5;
-    }
-    .shape-curve {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      border-top-color: #f5f5f5;
-      border-right-color: #f5f5f5;
-      transform: rotate(20deg);
-    }
-    .shape-line {
-      width: 30px;
-      height: 2px;
-      background: #f5f5f5;
-    }
-    .shape-irregular {
-      width: 26px;
-      height: 26px;
-      border-radius: 40% 65% 35% 70%;
-      border: 2px solid #f5f5f5;
-      transform: rotate(-12deg);
-    }
-    .actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 12px;
-      gap: 8px;
-    }
-    .btn {
-      border-radius: 999px;
-      border: none;
-      padding: 10px 16px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.12s ease, transform 0.08s ease, box-shadow 0.08s ease;
-    }
-    .btn.primary {
-      background: #ffffff;
-      color: #111;
-      flex: 1;
-    }
-    .btn.secondary {
-      background: #2b2b2b;
-      color: #f5f5f5;
-    }
-    .btn:active {
-      transform: translateY(1px);
-      box-shadow: none;
-    }
-    .result-card {
-      margin-top: 10px;
-      padding: 16px 14px;
-      border-radius: 18px;
-      background: #202020;
-      border: 1px solid #333;
-    }
-    .result-tag {
-      display: inline-flex;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 10px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: #333;
-      color: #bbb;
-      margin-bottom: 8px;
-    }
-    .result-emotion {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .result-text {
-      font-size: 12px;
-      color: #cccccc;
-      margin-bottom: 10px;
-      line-height: 1.5;
-    }
-    .result-subtitle {
-      font-size: 11px;
-      color: #999;
-      margin-bottom: 4px;
-      margin-top: 2px;
-    }
-    .meta {
-      font-size: 10px;
-      color: #777;
-      margin-top: 6px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aletheia</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
+    <style>
+        /* =========================================
+           CORE SETTINGS
+           ========================================= */
+        :root { 
+            --bg: #ffffff; 
+            --text: #111111; 
+            --sub: #555; 
+            --line: #e0e0e0;
+            --nav-bg: rgba(255, 255, 255, 0.1); 
+            --font-main: "Helvetica Neue", "Arial", sans-serif;
+            --font-mono: "Courier New", Courier, monospace; 
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
+        
+        body { 
+            background: var(--bg); color: var(--text); 
+            font-family: var(--font-main);
+            line-height: 1.5; overflow-x: hidden;
+        }
+
+        /* 필름 노이즈 */
+        body::after {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9000; opacity: 0.05;
+        }
+
+        /* 커서 */
+        .cursor-dot { width: 4px; height: 4px; background: #000; border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.1s; }
+        .cursor-ring { 
+            width: 50px; height: 50px; border: 1px solid rgba(0,0,0,0.1); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; 
+            transition: transform 0.2s ease-out; transform: translate(-50%, -50%);
+            backdrop-filter: blur(3px); background: rgba(255,255,255,0.05);
+        }
+        body.hovered .cursor-ring { transform: translate(-50%, -50%) scale(1.3); background: rgba(255,255,255,0.1); border-color: rgba(0,0,0,0.2); backdrop-filter: blur(0); }
+
+        .container { max-width: 1520px; margin: 0 auto; padding: 0 40px; }
+
+        /* =========================================
+           NAVIGATION
+           ========================================= */
+        nav { 
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            width: 98%; max-width: 1580px; height: 75px;
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 0 40px; z-index: 2000;
+            background: var(--nav-bg);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 6px;
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+        }
+        .logo { font-size: 19px; font-weight: 300; letter-spacing: -0.01em; cursor: pointer; display: flex; align-items: center; gap: 10px; color: #000; }
+        .logo svg { width: 26px; height: 26px; fill: none; stroke: #000; stroke-width: 1.5; }
+        .nav-right { display: flex; align-items: center; gap: 40px; }
+        .nav-links { display: flex; gap: 40px; list-style: none; font-size: 14px; font-weight: 400; }
+        .nav-links li { color: #555; transition: 0.2s; cursor: pointer; }
+        .nav-links li:hover { color: #000; }
+        .lang-btn { font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid #ccc; padding: 6px 16px; border-radius: 4px; background: transparent; transition: 0.2s; }
+        .lang-btn:hover { border-color: #000; background: #fff; }
+
+        /* =========================================
+           HERO & SECTIONS
+           ========================================= */
+        section { padding: 180px 0; border-bottom: 1px solid var(--line); position: relative; }
+        .reveal { opacity: 0; filter: blur(15px); transform: translateY(30px); transition: all 1.8s cubic-bezier(0.19, 1, 0.22, 1); }
+        .reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
+        .typing-target { opacity: 0; } .typing-active { opacity: 1; }
+
+        .hero-top { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 1px solid var(--line); position: relative; overflow: hidden; z-index: 1; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
+        
+        .def-wrapper { 
+            position: relative; 
+            z-index: 10; 
+            pointer-events: none; 
+            text-align: center;
+            transform: translate(0, 60px); 
+        }
+        .def-small { 
+            font-size: 20px; 
+            font-weight: 600; 
+            letter-spacing: 0.05em; 
+            margin-bottom: 240px; 
+            position: relative;
+            top: 100px;
+            opacity: 0; 
+            filter: blur(10px); 
+            transition: 2s ease; 
+            display: block; 
+            color: #000; 
+        }
+        .def-large { font-size: clamp(100px, 10vw, 200px); font-weight: 580; letter-spacing: -0.03em; line-height: 1; opacity: 0; filter: blur(20px); transform: scale(0.95); transition: 2.5s ease; color: #000; }
+        .visible { opacity: 0.85 !important; filter: blur(0) !important; transform: scale(1) !important; }
+        .floating { animation: float 6s ease-in-out infinite; opacity: 0.85 !important; filter: blur(0) !important; transform: scale(1) !important; }
+        @keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
+
+        .hero-sub { padding: 140px 0; min-height: 50vh; display: flex; align-items: center; }
+        .hero-title { font-size: clamp(40px, 4vw, 80px); font-weight: 300; line-height: 1.2; letter-spacing: 0.05em; color: #111; }
+        .label { font-size: 42px; font-weight: 500; letter-spacing: -0.02em; color: #000; margin-bottom: 80px; display: block; font-family: "Helvetica Neue", Arial, sans-serif; min-height: 1.2em; }
+        .phi-text { font-size: 28px; font-weight: 300; line-height: 1.5; max-width: 900px; margin-bottom: 40px; color: #222; }
+        .phi-desc { font-size: 16px; color: var(--sub); line-height: 1.7; max-width: 750px; font-weight: 300; }
+
+        /* =========================================
+           METHOD
+           ========================================= */
+        .method-list { display: flex; flex-direction: column; width: 100%; }
+        .method-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 80px 0; border-bottom: 1px solid #eee; position: relative; transition: 0.3s; }
+        .method-row:last-child { border-bottom: none; }
+        .method-left { width: 30%; display: flex; flex-direction: column; padding-top: 10px; }
+        .m-num { font-size: 12px; font-weight: 600; color: #999; margin-bottom: 20px; letter-spacing: 0.05em; }
+        .m-desc { font-size: 15px; line-height: 1.6; color: #444; margin-bottom: 30px; font-weight: 300; word-break: keep-all; }
+        .m-btn { padding: 10px 24px; font-size: 12px; font-weight: 600; border: 1px solid #ccc; background: transparent; color: #000; border-radius: 50px; width: fit-content; cursor: pointer; transition: all 0.3s ease; }
+        .m-btn:hover { border-color: #000; background: #000; color: #fff; transform: translateY(-2px); }
+        .method-right { width: 65%; text-align: right; user-select: none; }
+        .big-typo { display: flex; justify-content: flex-end; gap: 5px; font-size: clamp(50px, 8vw, 120px); font-weight: 300; line-height: 0.9; color: #000; letter-spacing: -0.02em; cursor: default; }
+        .char { display: inline-block; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); will-change: transform; }
+
+        /* =========================================
+           ARCHIVES
+           ========================================= */
+        .archive-section-wrapper { overflow: hidden; width: 100%; }
+        .archive-track { display: flex; gap: 30px; width: max-content; animation: scroll 60s linear infinite; }
+        .archive-track:hover { animation-play-state: paused; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-320px * 10 - 300px)); } }
+        .archive-card { min-width: 320px; height: 540px; background-color: #fafafa; background-image: radial-gradient(rgba(0,0,0,0.03) 0.8px, transparent 0.8px); background-size: 8px 8px; padding: 35px; display: flex; flex-direction: column; transition: transform 0.5s, box-shadow 0.5s; position: relative; }
+        .archive-card:hover { transform: translateY(-15px); box-shadow: 0 30px 60px rgba(0,0,0,0.05); background-color: #fff; }
+        .arc-cat-box { display: inline-block; padding: 5px 10px; border: 1px solid #000; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 30px; background: rgba(255,255,255,0.95); width: fit-content; z-index: 5; }
+        .arc-content-area { position: relative; flex-grow: 1; display: flex; flex-direction: column; }
+        .glass-shield { position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); border-radius: 4px; z-index: 4; transition: all 0.6s ease; border: 1px solid rgba(255,255,255,0.5); }
+        .archive-card:hover .glass-shield { opacity: 0; transform: scale(1.05); pointer-events: none; }
+        .arc-project { font-size: 30px; font-weight: 300; margin-bottom: 8px; }
+        .arc-sub { font-size: 14px; font-weight: 400; color: #555; margin-bottom: 25px; }
+        .arc-desc { font-size: 13px; color: #666; line-height: 1.6; margin-top: auto; word-break: keep-all; }
+
+        /* =========================================
+           [UI] UNIFIED MODAL SYSTEM (WINDOW STYLE)
+           ========================================= */
+        .process-overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: 3000; overflow: hidden;
+            background: rgba(245, 245, 245, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            opacity: 0; transition: opacity 0.5s ease;
+        }
+        .process-overlay.show { opacity: 1; }
+
+        .sb-frame { 
+            width: 90%; height: 85%; 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            background: #fff; border-radius: 8px; 
+            box-shadow: 0 50px 100px rgba(0,0,0,0.15); 
+            display: flex; flex-direction: column; overflow: hidden; border: 1px solid #ddd; 
+        }
+
+        .sb-bezel { 
+            width: 100%; height: 45px; background: #f0f0f0; border-bottom: 1px solid #ddd; 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 0 20px; font-size: 11px; font-weight: 700; color: #888; letter-spacing: 0.1em; 
+        }
+        .btn-close { cursor: pointer; transition: 0.2s; font-size: 14px; padding: 5px; }
+        .btn-close:hover { color: #000; }
+
+        .sb-body { display: flex; flex-grow: 1; height: 100%; position: relative; }
+
+        /* [MODE A] STANDARD CANVAS */
+        .sb-sidebar { width: 280px; background: #fafafa; border-right: 1px solid #eee; padding: 30px; display: flex; flex-direction: column; z-index: 50; overflow-y: auto; }
+        .sb-canvas-wrapper { flex-grow: 1; background: #fff; position: relative; overflow: hidden; cursor: grab; background-image: linear-gradient(#f0f0f0 1px, transparent 1px), linear-gradient(90deg, #f0f0f0 1px, transparent 1px); background-size: 40px 40px; }
+        .sb-canvas { width: 100%; height: 100%; position: absolute; top: 0; left: 0; transform-origin: 50% 50%; }
+        .word-chip { position: absolute; padding: 10px 20px; background: #fff; border: 1px solid #000; border-radius: 50px; font-size: 13px; cursor: grab; user-select: none; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .core-node { width: 8px; height: 8px; background: #000; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+        .core-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, 15px); font-size: 11px; font-weight: 700; }
+
+        /* [MODE B] INTERPRET ANALYSIS UI */
+        .interpret-view { display: none; width: 100%; height: 100%; display: flex; } /* Initial hidden state managed by JS */
+        
+        /* Left Essence */
+        .col-essence { width: 35%; border-right: 1px solid #e0e0e0; padding: 50px 40px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; }
+        .brand-meta { font-family: var(--font-mono); font-size: 11px; color: #888; margin-bottom: 40px; line-height: 1.8; }
+        .essence-text { font-size: 20px; font-weight: 300; line-height: 1.6; color: #111; word-break: keep-all; }
+        .essence-highlight { color: #000; font-weight: 500; border-bottom: 1px solid #000; padding-bottom: 2px; }
+        .core-question { margin-top: 60px; font-size: 14px; color: #444; font-style: italic; border-left: 2px solid #000; padding-left: 20px; line-height: 1.5; }
+
+        /* Right Grid */
+        .col-possibility { width: 65%; padding: 50px 40px; background: #fafafa; overflow-y: auto; position: relative; }
+        .section-label { font-family: var(--font-mono); font-size: 11px; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 30px; display: block; color: #000; letter-spacing: 0.1em; }
+        
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding-bottom: 80px; }
+        
+        .opt-card {
+            background: #fff; border: 1px solid #e0e0e0; padding: 25px;
+            transition: all 0.3s ease; cursor: pointer; position: relative;
+            display: flex; flex-direction: column; height: 300px;
+        }
+        .opt-card:hover { border-color: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transform: translateY(-5px); z-index: 2; }
+        
+        /* [Selection State] */
+        .opt-card.selected { background: #000; color: #fff; border-color: #000; }
+        .opt-card.selected .opt-type { color: #888; }
+        .opt-card.selected .opt-desc { color: #ccc; }
+        .opt-card.selected .opt-id { color: #555; }
+
+        .opt-id { font-family: var(--font-mono); font-size: 10px; color: #999; margin-bottom: 15px; }
+        .opt-name { font-size: 20px; font-weight: 400; margin-bottom: 5px; line-height: 1.2; }
+        .opt-type { font-size: 11px; color: #666; margin-bottom: 25px; font-style: italic; }
+        .opt-desc { font-size: 13px; line-height: 1.6; color: #444; font-weight: 300; }
+        
+        /* Check Circle */
+        .opt-check { 
+            margin-top: auto; width: 24px; height: 24px; border: 1px solid #ccc; border-radius: 50%; align-self: flex-end; 
+            display: flex; align-items: center; justify-content: center; opacity: 0.3; transition: 0.3s;
+        }
+        .opt-card:hover .opt-check { opacity: 1; }
+        .opt-card.selected .opt-check { border-color: #fff; opacity: 1; background: #fff; }
+        .opt-card.selected .opt-check::after { content: ""; width: 8px; height: 8px; background: #000; border-radius: 50%; }
+
+        /* Floating Next Button */
+        .btn-next-step {
+            position: absolute; bottom: 30px; right: 40px;
+            background: #000; color: #fff; padding: 12px 30px; font-size: 12px; font-weight: 600;
+            border-radius: 50px; cursor: pointer; transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            opacity: 0; pointer-events: none; transform: translateY(20px);
+        }
+        .btn-next-step.active { opacity: 1; pointer-events: all; transform: translateY(0); }
+        .btn-next-step:hover { transform: scale(1.05); }
+
+        /* [MODE C] DESIGN DIRECTION VIEW */
+        .design-view { display: none; width: 100%; height: 100%; display: flex; }
+        .d-left { width: 40%; border-right: 1px solid #eee; padding: 50px; background: #fff; display: flex; flex-direction: column; }
+        .d-right { width: 60%; padding: 50px; background: #fafafa; overflow-y: auto; }
+        
+        .d-label { font-family: var(--font-mono); font-size: 10px; color: #999; margin-bottom: 10px; display: block; }
+        .d-title { font-size: 36px; font-weight: 300; line-height: 1.1; margin-bottom: 20px; }
+        .d-tags-wrap { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 40px; }
+        .d-tag { border: 1px solid #ddd; padding: 5px 12px; font-size: 11px; border-radius: 20px; color: #555; }
+        
+        .spec-list { margin-top: 0; }
+        .spec-item { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 15px 0; font-size: 13px; }
+        .spec-key { font-weight: 600; color: #000; }
+        .spec-val { font-weight: 300; color: #555; text-align: right; }
+        
+        .ai-message { 
+            margin-top: auto; font-family: var(--font-mono); font-size: 11px; color: #888; 
+            border-top: 1px dashed #ccc; padding-top: 20px; line-height: 1.6; 
+        }
+
+        /* Generic UI Elements */
+        .cat-title { font-size: 10px; font-weight: 700; margin-bottom: 10px; display: block; border-bottom: 1px solid #000; padding-bottom: 5px; width: fit-content; margin-top: 25px; }
+        .ex-btn { font-size: 11px; background: #fff; border: 1px solid #ddd; padding: 5px 10px; margin: 0 4px 6px 0; cursor: pointer; color: #666; }
+        .btn-analyze { width: 100%; margin-top: auto; background: #000; color: #fff; padding: 12px; font-size: 12px; cursor: pointer; border: none; border-radius: 4px; }
+        
+        footer { padding: 60px 0; font-size: 12px; color: var(--sub); display: flex; justify-content: space-between; border-top: 1px solid var(--line); margin-top: 100px; }
+    </style>
 </head>
 <body>
-  <div class="app">
-    <div class="title">오늘의 감정 기반 추천</div>
-    <div class="subtitle">지금 끌리는 색과 형태를 고르면, 오늘의 상태에 맞는 커피와 차를 제안합니다.</div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
 
-    <!-- STEP 1: COLOR -->
-    <div id="step-color">
-      <div class="section-label">Step 1</div>
-      <div class="question">오늘 지금, 가장 끌리는 색을 하나 눌러 주세요.</div>
-      <div class="grid colors" id="color-grid"></div>
+    <nav>
+        <div class="logo" onclick="location.reload()">
+            <svg viewBox="0 0 24 24"><path d="M 5 19 A 10 10 0 1 1 19 19" fill="none" stroke-linecap="round" /><circle cx="12" cy="12" r="2.5" fill="#000" stroke="none" /></svg>
+            Aletheia
+        </div>
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li onclick="scrollToId('philosophy')">PHILOSOPHY</li>
+                <li onclick="scrollToId('method')">METHOD</li>
+                <li onclick="scrollToId('archive')">ARCHIVE</li>
+            </ul>
+            <button class="lang-btn" id="langBtn" onclick="toggleLanguage()">KO</button>
+        </div>
+    </nav>
+
+    <div id="mainPage">
+        <div class="hero-top reveal active">
+            <div id="canvas-container"></div>
+            <div class="def-wrapper">
+                <span class="def-small" id="defSmall">정의</span>
+                <div class="def-large" id="defLarge">DEFINITION</div>
+            </div>
+        </div>
+
+        <div class="container">
+            <section class="hero-sub">
+                <h1 class="hero-title">
+                    <span class="reveal" id="heroText1">당신의 이야기가</span><br>
+                    <span class="reveal" id="heroText2" style="transition-delay: 0.2s;">가장 강력한 물성이 될 때.</span>
+                </h1>
+            </section>
+
+            <section id="philosophy">
+                <span class="label typing-target" data-text="Our Core"></span>
+                <div class="phi-text reveal" id="phiText">"재료가 가진 본래의 성질을 방해하지 않는 것."</div>
+                <div class="phi-desc reveal" id="phiDesc">우리는 외부에서 유행하는 아이템을 가져오는 것이 아니라, 당신 내면의 원초적인 경험과 성질을 추출하여 세상에 단 하나뿐인 비즈니스의 물성으로 치환합니다.</div>
+            </section>
+
+            <section id="method">
+                <span class="label typing-target" data-text="The Method"></span>
+                <div class="method-list">
+                    <div class="method-row reveal">
+                        <div class="method-left">
+                            <span class="m-num">/0.1</span>
+                            <p class="m-desc"><strong>Unmasking</strong><br>사회적 페르소나를 덜어내고, 경험의 원형만을 드러냅니다.</p>
+                            <button class="m-btn" onclick="openBoard('unmask')">Start Analysis</button>
+                        </div>
+                        <div class="method-right"><div class="big-typo">UNMASK</div></div>
+                    </div>
+                    <div class="method-row reveal">
+                        <div class="method-left">
+                            <span class="m-num">/0.2</span>
+                            <p class="m-desc"><strong>Interpretation</strong><br>브랜드가 스스로 말해온 관계를 해석하고, 선택 가능한 가능성을 엽니다.</p>
+                            <button class="m-btn" onclick="openBoard('interpret')">Start Analysis</button>
+                        </div>
+                        <div class="method-right"><div class="big-typo">INTERPRET</div></div>
+                    </div>
+                    <div class="method-row reveal">
+                        <div class="method-left">
+                            <span class="m-num">/0.3</span>
+                            <p class="m-desc"><strong>Mapping</strong><br>전략을 제시하지 않고, 선택 가능한 지형을 구조화합니다.</p>
+                            <button class="m-btn" onclick="openBoard('map')">Start Analysis</button>
+                        </div>
+                        <div class="method-right"><div class="big-typo">MAP</div></div>
+                    </div>
+                    <div class="method-row reveal">
+                        <div class="method-left">
+                            <span class="m-num">/0.4</span>
+                            <p class="m-desc"><strong>Co-Solving</strong><br>우리는 해결하지 않습니다. 다만 함께 탐구합니다.</p>
+                            <button class="m-btn" onclick="openBoard('cosolve')">Start Analysis</button>
+                        </div>
+                        <div class="method-right"><div class="big-typo">CO-SOLVE</div></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="archive">
+                <span class="label typing-target" data-text="Selected Archives"></span>
+                <div class="archive-section-wrapper reveal">
+                    <div class="archive-track">
+                        <div class="archive-card"><span class="arc-cat-box">Cafe & Bakery</span><div class="arc-content-area"><h3 class="arc-project">GYEOL</h3><div class="arc-sub">침묵의 서사</div><p class="arc-desc">불필요한 소음을 제거하고 재료 본연의 소리에 집중하는 베이커리.</p><div class="glass-shield"></div></div></div>
+                        <div class="archive-card"><span class="arc-cat-box">Space Design</span><div class="arc-content-area"><h3 class="arc-project">RAW CONCRETE</h3><div class="arc-sub">가공되지 않은 날것</div><p class="arc-desc">마감이 덜 된듯한 거친 콘크리트 텍스처를 그대로 살려 진정성을 투영.</p><div class="glass-shield"></div></div></div>
+                        <div class="archive-card"><span class="arc-cat-box">Fashion</span><div class="arc-content-area"><h3 class="arc-project">STRUCTURE 01</h3><div class="arc-sub">기능적 본질주의</div><p class="arc-desc">장식을 배제하고 옷의 구조와 기능에만 집중한 미니멀리즘 레이블.</p><div class="glass-shield"></div></div></div>
+                        <div class="archive-card"><span class="arc-cat-box">Fragrance</span><div class="arc-content-area"><h3 class="arc-project">DEEP SOIL</h3><div class="arc-sub">고향의 흙냄새</div><p class="arc-desc">가장 원초적인 기억인 흙의 향기를 현대적으로 재해석하여 안정감을 주는 향.</p><div class="glass-shield"></div></div></div>
+                        <div class="archive-card"><span class="arc-cat-box">Exhibition</span><div class="arc-content-area"><h3 class="arc-project">THE VOID</h3><div class="arc-sub">비움의 미학</div><p class="arc-desc">아무것도 전시하지 않음으로써 관람객 스스로를 전시품으로 만드는 공간.</p><div class="glass-shield"></div></div></div>
+                        <div class="archive-card"><span class="arc-cat-box">Architecture</span><div class="arc-content-area"><h3 class="arc-project">MONOLITH</h3><div class="arc-sub">단일한 거대함</div><p class="arc-desc">이음새 없는 거대한 검은 돌덩어리 같은 건축물. 압도적인 숭고미.</p><div class="glass-shield"></div></div></div>
+                    </div>
+                </div>
+            </section>
+
+            <footer><div>© 2026 Aletheia</div><div>Less but Better</div></footer>
+        </div>
     </div>
 
-    <!-- STEP 2: SHAPE -->
-    <div id="step-shape" style="display:none;">
-      <div class="section-label">Step 2</div>
-      <div class="question">이번에는 지금 마음과 가장 비슷한 형태를 골라 주세요.</div>
-      <div class="grid shapes" id="shape-grid"></div>
+    <div id="boardPage" class="process-overlay">
+        <div class="sb-frame">
+            <div class="sb-bezel">
+                <span class="board-title">STORY BOARD</span>
+                <span class="btn-close" onclick="closeBoard()">✕</span>
+            </div>
+            
+            <div class="sb-body">
+                
+                <div id="mode-standard" style="display:flex; width:100%; height:100%;">
+                    <div class="sb-sidebar">
+                        <div style="margin-bottom: 40px;">
+                            <label style="font-size: 11px; font-weight: 700; margin-bottom: 10px; display: block;">ADD FRAGMENT</label>
+                            <input type="text" id="wordInput" placeholder="Type & Enter..." style="width: 100%; border: none; border-bottom: 1px solid #ddd; padding: 10px 0; outline: none; font-size: 15px; background: transparent;">
+                        </div>
+                        <span class="cat-title">SENSES</span>
+                        <div><button class="ex-btn" onclick="addChip('차가운 콘크리트')">차가운 콘크리트</button><button class="ex-btn" onclick="addChip('종이 냄새')">종이 냄새</button></div>
+                        <span class="cat-title">SPACE</span>
+                        <div><button class="ex-btn" onclick="addChip('새벽의 부엌')">새벽의 부엌</button><button class="ex-btn" onclick="addChip('텅 빈 미술관')">텅 빈 미술관</button></div>
+                        <span class="cat-title">HABIT</span>
+                        <div><button class="ex-btn" onclick="addChip('커피 내리기')">커피 내리기</button><button class="ex-btn" onclick="addChip('멍 때리기')">멍 때리기</button></div>
+                        <button class="btn-analyze" onclick="alert('Analysis Function')">Analyze Essence</button>
+                    </div>
+                    <div class="sb-canvas-wrapper" id="canvasWrapper">
+                        <div class="sb-canvas" id="canvas">
+                            <div class="core-node"></div><div class="core-label">YOU</div>
+                        </div>
+                    </div>
+                </div>
 
-      <div class="actions">
-        <button class="btn secondary" id="back-to-color">이전</button>
-        <button class="btn primary" id="show-result">결과 보기</button>
-      </div>
+                <div id="mode-interpret" class="interpret-view" style="display:none;">
+                    <div class="col-essence">
+                        <div>
+                            <div class="brand-meta">
+                                TARGET: MONAMI<br>CORE ID: MON AMI (MY FRIEND)<br>STATUS: UBIQUITOUS TOOL
+                            </div>
+                            <div class="essence-text">
+                                "Mon Ami, '나의 친구'.<br>
+                                지난 50년, 모나미는 한국인의 일상 가장 가까운 곳에서 생각과 경험을 함께해왔습니다.<br><br>
+                                누군가의 일기, 누군가의 공부, 누군가의 생계...<br>
+                                모나미는 언제나 저렴하고 튼튼하며,<br>
+                                무엇보다 <span class="essence-highlight">정직한 도구</span>였습니다.<br><br>
+                                우리는 이 '순수한 본질'에 주목합니다.<br>
+                                덧대지 않은 담백함, 그것이 모나미의 영혼입니다."
+                            </div>
+                        </div>
+                        <div class="core-question">
+                            CORE QUESTION:<br>
+                            "하지만 친구가 꼭 '볼펜'의 형태여야 할까요?<br>
+                            이 오랜 관계를 이어갈 새로운 물성을 제안합니다."
+                        </div>
+                    </div>
+                    <div class="col-possibility">
+                        <span class="section-label">GENERATED POSSIBILITY FIELDS (5)</span>
+                        <div class="options-grid">
+                            <div class="opt-card" onclick="selectCard(this, 'opt1')">
+                                <div class="opt-id">CANDIDATE 01</div>
+                                <h3 class="opt-name">Low-pressure<br>Record Tool</h3>
+                                <div class="opt-type">기록의 부담을 줄이는 도구</div>
+                                <p class="opt-desc">"잘 써야 한다"는 강박을 제거합니다. 하루 한 줄, 짧은 호흡으로만 기록할 수 있는 제한된 페이지의 툴.</p>
+                                <div class="opt-check"></div>
+                            </div>
+                            <div class="opt-card" onclick="selectCard(this, 'opt2')">
+                                <div class="opt-id">CANDIDATE 02</div>
+                                <h3 class="opt-name">Non-writing<br>Memory Object</h3>
+                                <div class="opt-type">쓰지 않아도 되는 기록</div>
+                                <p class="opt-desc">기록 피로 시대의 역설. 잉크 없이 누르기만 하면 날짜가 찍히는, 흔적만 남기는 오브제.</p>
+                                <div class="opt-check"></div>
+                            </div>
+                            <div class="opt-card" onclick="selectCard(this, 'opt3')">
+                                <div class="opt-id">CANDIDATE 03</div>
+                                <h3 class="opt-name">Shared<br>Writing Object</h3>
+                                <div class="opt-type">세대 공유형 상품</div>
+                                <p class="opt-desc">개인 소유의 개념을 제거하고, 한 가정이나 교실이 공용으로 사용하며 기억을 공유하는 도구.</p>
+                                <div class="opt-check"></div>
+                            </div>
+                            <div class="opt-card" onclick="selectCard(this, 'opt4')">
+                                <div class="opt-id">CANDIDATE 04</div>
+                                <h3 class="opt-name">Presence<br>Object</h3>
+                                <div class="opt-type">곁에 있음을 파는 물건</div>
+                                <p class="opt-desc">기능은 없습니다. 책상 위에 묵묵히 존재하는 것만으로 위안을 주는 물성을 가진 덩어리.</p>
+                                <div class="opt-check"></div>
+                            </div>
+                            <div class="opt-card" onclick="selectCard(this, 'opt5')">
+                                <div class="opt-id">CANDIDATE 05</div>
+                                <h3 class="opt-name">Pen,<br>But Re-defined</h3>
+                                <div class="opt-type">재정의된 볼펜</div>
+                                <p class="opt-desc">가장 보수적인 혁신. 기록량을 물리적으로 제한하거나, 시간이 지나면 지워지는 잉크.</p>
+                                <div class="opt-check"></div>
+                            </div>
+                        </div>
+                        <div class="btn-next-step" onclick="goToDesign()">NEXT STEP →</div>
+                    </div>
+                </div>
+
+                <div id="mode-design" class="design-view" style="display:none;">
+                    <div class="d-left">
+                        <span class="d-label">SELECTED CONCEPT</span>
+                        <h2 class="d-title" id="dTitle">Title</h2>
+                        <div class="d-tags-wrap" id="dTags"></div>
+                        <div class="ai-message">
+                            ALETHEIA AI ENGINE:<br>
+                            "This object transforms the abstraction of 'friendship' into tangible form.<br>
+                            We focused on the texture of silence and the weight of existence."
+                        </div>
+                    </div>
+                    <div class="d-right">
+                        <span class="d-label">DESIGN DIRECTION SPECIFICATION</span>
+                        <div class="spec-list">
+                            <div class="spec-item"><span class="spec-key">Mood Keyword</span><span class="spec-val" id="dMood">Silence, Void</span></div>
+                            <div class="spec-item"><span class="spec-key">Core Material</span><span class="spec-val" id="dMat">Uncoated Paper, Raw Wood</span></div>
+                            <div class="spec-item"><span class="spec-key">Color Palette</span><span class="spec-val" id="dColor">#F5F5F0, #333333</span></div>
+                            <div class="spec-item"><span class="spec-key">Form Factor</span><span class="spec-val" id="dForm">A6 Compact Size (105x148mm)</span></div>
+                            <div class="spec-item"><span class="spec-key">Production Method</span><span class="spec-val" id="dMethod">Exposed Spine Binding (노출 제본)</span></div>
+                        </div>
+                        <button class="btn-analyze" style="margin-top:60px;" onclick="location.reload()">Back to Home</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 
-    <!-- RESULT -->
-    <div id="result-section" style="display:none;">
-      <div class="section-label">Result</div>
-      <div class="question">오늘의 감정 리포트</div>
-      <div class="result-card" id="result-card"></div>
+    <script>
+        // 1. CURSOR
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorRing = document.querySelector('.cursor-ring');
+        document.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px'; cursorDot.style.top = e.clientY + 'px';
+            cursorRing.style.left = e.clientX + 'px'; cursorRing.style.top = e.clientY + 'px';
+        });
+        document.querySelectorAll('button, a, input, .archive-card, .logo, .method-item, .opt-card').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovered'));
+        });
 
-      <div class="actions">
-        <button class="btn secondary" id="reset">처음으로</button>
-      </div>
-    </div>
-  </div>
+        // 2. LOAD & ANIMATION
+        window.onload = () => {
+            setTimeout(() => { document.getElementById('defSmall').classList.add('visible'); }, 800);
+            setTimeout(() => { document.getElementById('defLarge').classList.add('visible'); setTimeout(() => document.getElementById('defLarge').classList.add('floating'), 2500); }, 1800);
+            document.querySelectorAll('.big-typo').forEach(el => {
+                const text = el.innerText.trim(); el.innerHTML = '';
+                text.split('').forEach((char, i) => {
+                    const span = document.createElement('span'); span.innerText = char; span.className = 'char';
+                    span.style.transitionDelay = `${i * 0.03}s`; el.appendChild(span);
+                });
+            });
+        };
+        document.querySelectorAll('.method-row').forEach(row => {
+            row.addEventListener('mouseenter', () => { row.querySelectorAll('.char').forEach(c => c.style.transform = 'translateX(20px)'); });
+            row.addEventListener('mouseleave', () => { row.querySelectorAll('.char').forEach(c => c.style.transform = 'translateX(0)'); });
+        });
 
-  <script>
-    // 색상 정의 (선택 화면에서는 텍스트를 전혀 보여주지 않음)
-    const colors = [
-      { id: "blue",   css: "#3A7BFF" },
-      { id: "green",  css: "#39B37F" },
-      { id: "yellow", css: "#F6C945" },
-      { id: "orange", css: "#F48A3C" },
-      { id: "red",    css: "#E94444" },
-      { id: "purple", css: "#A463E8" },
-      { id: "black",  css: "#111111" },
-      { id: "white",  css: "#f5f5f5" },
-    ];
+       // 3. OBSERVERS (Re-typing Effect Update)
+        const revealObserver = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); }); }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        
+        const typingObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    // 화면에 들어왔을 때: 클래스가 없으면 타이핑 시작
+                    if (!e.target.classList.contains('typing-active')) {
+                        e.target.classList.add('typing-active');
+                        const text = e.target.getAttribute('data-text'); 
+                        e.target.innerText = "";
+                        let i = 0; 
+                        function type() { 
+                            // typing-active 클래스가 있을 때만 실행 (도중에 나가면 멈춤)
+                            if(i < text.length && e.target.classList.contains('typing-active')) { 
+                                e.target.innerText += text.charAt(i); 
+                                i++; 
+                                setTimeout(type, 50); 
+                            } 
+                        } 
+                        type();
+                    }
+                } else {
+                    // [수정됨] 화면 밖으로 나가면: 클래스 제거하고 텍스트 초기화 (리셋)
+                    e.target.classList.remove('typing-active');
+                    e.target.innerText = ""; 
+                }
+            });
+        }, { threshold: 0.5 }); // 감도 조절
+        document.querySelectorAll('.typing-target').forEach(el => typingObserver.observe(el));
 
-    // 도형 정의 (선택 화면에서 텍스트 없음)
-    const shapes = [
-      { id: "circle",    type: "soft" },
-      { id: "square",    type: "stable" },
-      { id: "triangle",  type: "dynamic" },
-      { id: "curve",     type: "soft" },
-      { id: "line",      type: "stable" },
-      { id: "irregular", type: "dynamic" },
-    ];
+        // 4. MODAL LOGIC
+        const boardPage = document.getElementById('boardPage');
+        const boardTitle = document.querySelector('.board-title');
+        
+        // Views
+        const viewStd = document.getElementById('mode-standard');
+        const viewInt = document.getElementById('mode-interpret');
+        const viewDes = document.getElementById('mode-design');
 
-    let selectedColor = null;
-    let selectedShape = null;
+        function openBoard(mode) {
+            boardPage.style.display = 'block';
+            setTimeout(() => boardPage.classList.add('show'), 10);
+            document.body.style.overflow = 'hidden';
 
-    const colorGrid = document.getElementById("color-grid");
-    const shapeGrid = document.getElementById("shape-grid");
-    const stepColor = document.getElementById("step-color");
-    const stepShape = document.getElementById("step-shape");
-    const resultSection = document.getElementById("result-section");
-    const resultCard = document.getElementById("result-card");
+            // Reset views
+            viewStd.style.display = 'none';
+            viewInt.style.display = 'none';
+            viewDes.style.display = 'none';
 
-    // 색상 버튼 생성
-    colors.forEach(color => {
-      const btn = document.createElement("button");
-      btn.className = "option";
-      btn.dataset.id = color.id;
+            if (mode === 'interpret') {
+                boardTitle.innerText = 'INTERPRETATION : MONAMI';
+                viewInt.style.display = 'flex';
+            } else {
+                boardTitle.innerText = 'STORY BOARD';
+                viewStd.style.display = 'flex';
+            }
+        }
 
-      const circle = document.createElement("div");
-      circle.className = "color-circle";
-      circle.style.background = color.css;
+        function closeBoard() {
+            boardPage.classList.remove('show');
+            setTimeout(() => { boardPage.style.display = 'none'; document.body.style.overflow = 'auto'; }, 500);
+        }
 
-      btn.appendChild(circle);
+        // Selection Logic
+        let selectedData = null;
+        function selectCard(el, key) {
+            document.querySelectorAll('.opt-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            document.querySelector('.btn-next-step').classList.add('active');
+            
+            // Simulating Data Selection
+            const dataMap = {
+                'opt1': { title:'Low-pressure Record Tool', mood:'Silence, Relief', mat:'Recycled Paper (80g)', col:'#F0F0F0, #222', form:'A6 Mini Notebook', method:'Exposed Spine Binding' },
+                'opt2': { title:'Non-writing Memory Object', mood:'Abstract, Time', mat:'Aluminum, Stone', col:'#Silver, #Gray', form:'Desk Object', method:'CNC Milling' },
+                'opt3': { title:'Shared Writing Object', mood:'Community, Warmth', mat:'Wood, Fabric', col:'#Beige, #Brown', form:'Large Rolling Paper', method:'Handcraft Finishing' },
+                'opt4': { title:'Presence Object', mood:'Solid, Calm', mat:'Concrete, Brass', col:'#Dark Gray, #Gold', form:'Geometric Cube', method:'Casting' },
+                'opt5': { title:'Pen, But Re-defined', mood:'Classic, Modern', mat:'Bio-Plastic', col:'#Monami Black, #White', form:'Hexagonal Pen', method:'Injection Molding' }
+            };
+            selectedData = dataMap[key] || dataMap['opt1'];
+        }
 
-      btn.addEventListener("click", () => {
-        selectedColor = color.id;
-        [...colorGrid.children].forEach(c => c.classList.remove("selected"));
-        btn.classList.add("selected");
-        // 자동으로 다음 단계로 이동
-        stepColor.style.display = "none";
-        stepShape.style.display = "block";
-      });
+        function goToDesign() {
+            viewInt.style.display = 'none';
+            viewDes.style.display = 'flex';
+            boardTitle.innerText = 'DESIGN DIRECTION';
+            
+            // Bind Data
+            if(selectedData) {
+                document.getElementById('dTitle').innerText = selectedData.title;
+                document.getElementById('dMood').innerText = selectedData.mood;
+                document.getElementById('dMat').innerText = selectedData.mat;
+                document.getElementById('dColor').innerText = selectedData.col;
+                document.getElementById('dForm').innerText = selectedData.form;
+                document.getElementById('dMethod').innerText = selectedData.method;
+                
+                const tags = ['Concept', 'Materiality', 'Structure'];
+                const tagContainer = document.getElementById('dTags');
+                tagContainer.innerHTML = '';
+                tags.forEach(t => tagContainer.innerHTML += `<span class="d-tag">${t}</span>`);
+            }
+        }
 
-      colorGrid.appendChild(btn);
-    });
+       // 5. CANVAS LOGIC (Zoom Update)
+        const canvasWrapper = document.getElementById('canvasWrapper');
+        const canvas = document.getElementById('canvas');
+        const wordInput = document.getElementById('wordInput');
+        let scale = 1, translateX = 0, translateY = 0, chips = [];
+        
+        // [수정됨] Ctrl 키 없이 휠만 굴려도 줌인/줌아웃 되도록 변경
+        canvasWrapper.addEventListener('wheel', (e) => {
+            e.preventDefault(); // 페이지 스크롤 방지
+            scale += e.deltaY * -0.001; 
+            scale = Math.min(Math.max(0.5, scale), 3); // 최소 0.5배 ~ 최대 3배
+            canvas.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`; 
+        });
 
-    // 도형 버튼 생성
-    shapes.forEach(shape => {
-      const btn = document.createElement("button");
-      btn.className = "option";
-      btn.dataset.id = shape.id;
+        wordInput.addEventListener('keypress', (e) => { if(e.key === 'Enter' && wordInput.value.trim() !== "") { addChip(wordInput.value.trim()); wordInput.value = ""; } });
+        function addChip(text) {
+            const chip = document.createElement('div'); chip.className = 'word-chip'; chip.innerText = text;
+            chip.style.left = (canvasWrapper.offsetWidth/2 + (Math.random()-0.5)*200) + 'px';
+            chip.style.top = (canvasWrapper.offsetHeight/2 + (Math.random()-0.5)*150) + 'px';
+            let isDrag = false, dx, dy, il, it;
+            chip.addEventListener('mousedown', (e) => { isDrag = true; dx=e.clientX; dy=e.clientY; il=parseFloat(chip.style.left); it=parseFloat(chip.style.top); });
+            window.addEventListener('mousemove', (e) => { if(isDrag) { chip.style.left = (il + (e.clientX-dx)/scale) + 'px'; chip.style.top = (it + (e.clientY-dy)/scale) + 'px'; } });
+            window.addEventListener('mouseup', () => isDrag = false);
+            canvas.appendChild(chip); chips.push(chip);
+        }
 
-      const icon = document.createElement("div");
-      icon.className = "shape-icon";
+       // 6. THREE.JS (Architectural Wireframe Core)
+        (function() {
+            const container = document.getElementById('canvas-container'); if(!container) return;
+            
+            // [1] Setup
+            const scene = new THREE.Scene(); 
+            scene.background = new THREE.Color(0xffffff); 
+            scene.fog = new THREE.FogExp2(0xffffff, 0.002);
+            
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000); 
+            camera.position.z = 180;
 
-      const inner = document.createElement("div");
-      inner.className = "shape-" + shape.id;
-      icon.appendChild(inner);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight); 
+            renderer.setPixelRatio(window.devicePixelRatio); 
+            renderer.toneMapping = THREE.ACESFilmicToneMapping; 
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            container.appendChild(renderer.domElement);
 
-      btn.appendChild(icon);
+            // [2] Crisp Texture (입자 텍스처)
+            function createCrispTexture() {
+                const size = 128; 
+                const canvas = document.createElement('canvas');
+                canvas.width = size; canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, size, size);
+                
+                const grad = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+                grad.addColorStop(0, 'rgba(0,0,0,1)');     
+                grad.addColorStop(0.2, 'rgba(10,10,10,0.8)');
+                grad.addColorStop(0.5, 'rgba(30,30,30,0.2)'); 
+                grad.addColorStop(1, 'rgba(0,0,0,0)');
+                
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, size, size);
+                return new THREE.CanvasTexture(canvas);
+            }
 
-      btn.addEventListener("click", () => {
-        selectedShape = shape.id;
-        [...shapeGrid.children].forEach(c => c.classList.remove("selected"));
-        btn.classList.add("selected");
-      });
+           // [3] The Architectural Core (크고 선명한 와이어프레임)
+            const coreGroup = new THREE.Group(); 
+            scene.add(coreGroup);
+            
+            // [수정됨] 크기 3.5 -> 3.8로 키움 / 디테일 5 유지
+            const coreGeo = new THREE.IcosahedronGeometry(3.8, 5); 
+            
+            const coreMat = new THREE.MeshBasicMaterial({ 
+                color: 0x000000,    // [수정됨] 완전한 블랙
+                wireframe: true,    
+                transparent: true, 
+                opacity: 0.3,       // [수정됨] 0.15 -> 0.3 (선을 훨씬 선명하게)
+            });
+            const coreMesh = new THREE.Mesh(coreGeo, coreMat); 
+            coreGroup.add(coreMesh);
 
-      shapeGrid.appendChild(btn);
-    });
+            // 외곽 궤도도 비율에 맞춰 살짝 키움 (4.5 -> 5.0)
+            const outerGeo = new THREE.IcosahedronGeometry(5.0, 2);
+            const outerMat = new THREE.MeshBasicMaterial({ color: 0x555555, wireframe: true, transparent: true, opacity: 0.1 });
+            const outerMesh = new THREE.Mesh(outerGeo, outerMat);
+            coreGroup.add(outerMesh);
 
-    // 뒤로가기
-    document.getElementById("back-to-color").addEventListener("click", () => {
-      stepShape.style.display = "none";
-      stepColor.style.display = "block";
-    });
+            // [4] Particles (이전과 동일한 고급스러운 분포)
+            const pGeo = new THREE.BufferGeometry(); 
+            const pCount = 28000; 
+            const pPos = new Float32Array(pCount*3); 
+            const originalPos = [];
+            const randoms = [];
 
-    // 결과 보기
-    document.getElementById("show-result").addEventListener("click", () => {
-      if (!selectedColor || !selectedShape) {
-        alert("색과 형태를 모두 하나씩 선택해 주세요.");
-        return;
-      }
-      const result = computeRecommendation(selectedColor, selectedShape);
-      renderResult(result);
-      stepShape.style.display = "none";
-      resultSection.style.display = "block";
-    });
+            for(let i=0; i<pCount*3; i+=3) {
+                const r = 20 + 85 * Math.pow(Math.random(), 1.2); 
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                
+                const x = r * Math.sin(phi) * Math.cos(theta);
+                const y = r * Math.sin(phi) * Math.sin(theta);
+                const z = r * Math.cos(phi);
+                
+                pPos[i] = x; pPos[i+1] = y; pPos[i+2] = z;
+                originalPos.push({x, y, z});
+                
+                randoms.push({
+                    speed: 0.1 + Math.random() * 0.4, 
+                    phase: Math.random() * Math.PI * 2,
+                    amp: 1.5 + Math.random() * 3.0 
+                });
+            }
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
 
-    // 리셋
-    document.getElementById("reset").addEventListener("click", () => {
-      selectedColor = null;
-      selectedShape = null;
-      [...colorGrid.children].forEach(c => c.classList.remove("selected"));
-      [...shapeGrid.children].forEach(c => c.classList.remove("selected"));
-      resultCard.innerHTML = "";
-      resultSection.style.display = "none";
-      stepColor.style.display = "block";
-    });
+            const pMat = new THREE.PointsMaterial({ 
+                size: 1.2,          
+                color: 0x111111,    
+                map: createCrispTexture(), 
+                transparent: true, 
+                opacity: 0.85,      
+                sizeAttenuation: true, 
+                depthWrite: false, 
+                blending: THREE.NormalBlending 
+            });
+            const pMesh = new THREE.Points(pGeo, pMat); 
+            scene.add(pMesh);
 
-    // 감정 & 커피/차 추천 로직
-    function computeRecommendation(colorId, shapeId) {
-      const shapeMeta = shapes.find(s => s.id === shapeId);
-      const shapeType = shapeMeta ? shapeMeta.type : "soft";
+            // [5] Lighting & Post Processing
+            const ambientLight = new THREE.AmbientLight(0xffffff, 1.5); scene.add(ambientLight);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 2);
+            dirLight.position.set(50, 50, 50);
+            scene.add(dirLight);
 
-      let tag = "";
-      let emotion = "";
-      let description = "";
-      let coffee = "";
-      let tea = "";
+            const composer = new THREE.EffectComposer(renderer); 
+            composer.addPass(new THREE.RenderPass(scene, camera));
+            const bloom = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.1, 0.5, 0.98); 
+            composer.addPass(bloom);
 
-      switch (colorId) {
-        case "blue":
-          tag = "CALM · CLEAR";
-          emotion = "차분함과 정리가 필요해 보이는 상태";
-          description = "머릿속에 생각이 많지만, 크게 요동치지 않고 정리하고 싶은 마음이 있는 날입니다.";
-          coffee = "클린 워시드 싱글오리진 필터커피";
-          tea = "은은한 재스민 티";
-          break;
-        case "green":
-          tag = "RECOVER · BALANCE";
-          emotion = "회복과 균형을 원하는 상태";
-          description = "몸과 마음 에너지가 조금 내려간 상태에서, 다시 균형을 회복하고 싶은 마음이 느껴집니다.";
-          coffee = "고소한 미디엄 라떼";
-          tea = "캐모마일 허브티";
-          break;
-        case "yellow":
-          tag = "ENERGY · JOY";
-          emotion = "에너지와 재미를 찾는 상태";
-          description = "하루에 활력을 더 넣고 싶거나, 가벼운 즐거움을 찾는 밝은 톤의 상태입니다.";
-          coffee = "밝은 산미의 싱글오리진 필터커피";
-          tea = "레몬 허니티";
-          break;
-        case "orange":
-          tag = "SOCIAL · WARM";
-          emotion = "사람과의 대화·교류를 원하는 상태";
-          description = "혼자 있는 것보다는 주변 사람과 가볍게 섞이고 싶은 따뜻한 에너지의 날입니다.";
-          coffee = "카라멜 라떼";
-          tea = "복숭아 향 홍차";
-          break;
-        case "red":
-          tag = "ALERT · INTENSE";
-          emotion = "각성이 높거나, 약간의 긴장과 압박이 섞인 상태";
-          description = "감정 에너지가 강하게 올라온 상태일 수 있고, 집중·스트레스가 함께 존재할 수도 있습니다.";
-          coffee = "더블 에스프레소";
-          tea = "생강 레몬티";
-          break;
-        case "purple":
-          tag = "DEEP · SENSITIVE";
-          emotion = "사유와 감성이 깊어진 상태";
-          description = "내향적으로 생각이 깊어지거나, 예술적·감성적인 상태에 가까운 날입니다.";
-          coffee = "다크 초콜릿 노트의 라떼";
-          tea = "얼그레이 라벤더 티";
-          break;
-        case "black":
-          tag = "PROTECT · RESET";
-          emotion = "과부하 또는 자기 보호가 필요한 상태";
-          description = "에너지가 많이 소진됐거나, 조용한 보호막이 필요해서 스스로를 지키고 싶은 마음이 느껴집니다.";
-          coffee = "디카페인 플랫 화이트";
-          tea = "루이보스 바닐라 티";
-          break;
-        case "white":
-          tag = "RESET · LIGHT";
-          emotion = "정리·리셋·새 출발을 원하는 상태";
-          description = "머릿속을 가볍게 비우고, 다시 정돈된 상태로 시작하고 싶은 마음이 있는 날입니다.";
-          coffee = "담백한 무가당 라떼";
-          tea = "가벼운 화이트 티 또는 연한 녹차";
-          break;
-      }
+            // [6] Animation Loop
+            let time = 0;
+            let mouseX = 0, mouseY = 0;
+            const wHalfX = window.innerWidth/2; const wHalfY = window.innerHeight/2;
+            document.addEventListener('mousemove', (e) => { mouseX = (e.clientX - wHalfX) * 0.05; mouseY = (e.clientY - wHalfY) * 0.05; });
 
-      let tuneNote = "";
-      if (shapeType === "soft") {
-        tuneNote = "오늘은 자극보다는 부드러운 밸런스를 조금 더 강조해 주세요. 텍스처를 매끄럽게 가져가는 쪽이 좋습니다.";
-      } else if (shapeType === "stable") {
-        tuneNote = "맛의 구조가 분명하게 느껴지도록 산미·단맛·바디의 균형을 또렷하게 나눠 주면 좋습니다.";
-      } else if (shapeType === "dynamic") {
-        tuneNote = "한 지점(산미, 단맛, 향) 정도는 조금 더 과감하게 강조해 주면, 기억에 남는 한 컵이 되기 좋습니다.";
-      }
+            function animate() {
+                requestAnimationFrame(animate); 
+                time += 0.0008; 
 
-      const baristaHint =
-        "바리스타 메모: 손님의 선택은 언어가 아니라 감각에서 나온 것이므로, 오늘 컨디션을 한 번 더 가볍게 물어본 뒤 강도(카페인·온도·당도)를 조정해 주세요.";
+                const positions = pGeo.attributes.position.array;
+                
+                for(let i=0; i<pCount; i++) {
+                    const i3 = i*3; const o = originalPos[i]; const r = randoms[i];
+                    const wave = Math.sin(time * r.speed + r.phase) * r.amp;
+                    positions[i3]     = o.x + Math.cos(time * 0.5 + r.phase) * 1.5;
+                    positions[i3 + 1] = o.y + Math.sin(time * 0.3 + r.phase) * 1.5 + wave;
+                    positions[i3 + 2] = o.z + wave;
+                }
+                pGeo.attributes.position.needsUpdate = true;
 
-      return { tag, emotion, description, coffee, tea, tuneNote, baristaHint };
-    }
+                const targetRotX = mouseY * 0.00005; 
+                const targetRotY = mouseX * 0.00005;
+                pMesh.rotation.y += 0.0001 + targetRotY; 
+                pMesh.rotation.x += targetRotX;
+                
+                // 코어 회전: 아주 천천히 돌면서 구조미를 보여줌
+                coreGroup.rotation.y -= 0.0005; 
+                coreGroup.rotation.x += 0.0002;
 
-    function renderResult(result) {
-      resultCard.innerHTML = "";
-
-      const tagEl = document.createElement("div");
-      tagEl.className = "result-tag";
-      tagEl.textContent = result.tag;
-
-      const emotionEl = document.createElement("div");
-      emotionEl.className = "result-emotion";
-      emotionEl.textContent = result.emotion;
-
-      const descEl = document.createElement("div");
-      descEl.className = "result-text";
-      descEl.textContent = result.description;
-
-      const coffeeTitle = document.createElement("div");
-      coffeeTitle.className = "result-subtitle";
-      coffeeTitle.textContent = "오늘 추천 커피";
-
-      const coffeeText = document.createElement("div");
-      coffeeText.className = "result-text";
-      coffeeText.textContent = "· " + result.coffee;
-
-      const teaTitle = document.createElement("div");
-      teaTitle.className = "result-subtitle";
-      teaTitle.textContent = "오늘 추천 차 (TEA)";
-
-      const teaText = document.createElement("div");
-      teaText.className = "result-text";
-      teaText.textContent = "· " + result.tea;
-
-      const tuneTitle = document.createElement("div");
-      tuneTitle.className = "result-subtitle";
-      tuneTitle.textContent = "형태 선택으로 읽히는 추가 톤";
-
-      const tuneText = document.createElement("div");
-      tuneText.className = "result-text";
-      tuneText.textContent = result.tuneNote;
-
-      const meta = document.createElement("div");
-      meta.className = "meta";
-      meta.textContent = result.baristaHint;
-
-      resultCard.appendChild(tagEl);
-      resultCard.appendChild(emotionEl);
-      resultCard.appendChild(descEl);
-      resultCard.appendChild(coffeeTitle);
-      resultCard.appendChild(coffeeText);
-      resultCard.appendChild(teaTitle);
-      resultCard.appendChild(teaText);
-      resultCard.appendChild(tuneTitle);
-      resultCard.appendChild(tuneText);
-      resultCard.appendChild(meta);
-    }
-  </script>
+                composer.render();
+            }
+            animate();
+            window.addEventListener('resize', ()=>{ camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); composer.setSize(window.innerWidth, window.innerHeight); });
+        })();
+        
+        function scrollToId(id) { closeBoard(); document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+        function toggleLanguage() { const btn=document.getElementById('langBtn'); btn.innerText = btn.innerText==='KO'?'EN':'KO'; }
+    </script>
 </body>
 </html>
