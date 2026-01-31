@@ -54,6 +54,42 @@
         .container { max-width: 1520px; margin: 0 auto; padding: 0 40px; }
 
         /* =========================================
+           VIEW TOGGLE BUTTON (새로 추가)
+           ========================================= */
+        .view-toggle-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 2001;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .view-toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+        }
+        
+        .view-toggle-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 2;
+        }
+
+        /* =========================================
            NAVIGATION
            ========================================= */
         nav { 
@@ -187,16 +223,14 @@
         .core-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, 15px); font-size: 11px; font-weight: 700; }
 
         /* [MODE B] INTERPRET ANALYSIS UI */
-        .interpret-view { display: none; width: 100%; height: 100%; display: flex; } /* Initial hidden state managed by JS */
+        .interpret-view { display: none; width: 100%; height: 100%; display: flex; }
         
-        /* Left Essence */
         .col-essence { width: 35%; border-right: 1px solid #e0e0e0; padding: 50px 40px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; }
         .brand-meta { font-family: var(--font-mono); font-size: 11px; color: #888; margin-bottom: 40px; line-height: 1.8; }
         .essence-text { font-size: 20px; font-weight: 300; line-height: 1.6; color: #111; word-break: keep-all; }
         .essence-highlight { color: #000; font-weight: 500; border-bottom: 1px solid #000; padding-bottom: 2px; }
         .core-question { margin-top: 60px; font-size: 14px; color: #444; font-style: italic; border-left: 2px solid #000; padding-left: 20px; line-height: 1.5; }
 
-        /* Right Grid */
         .col-possibility { width: 65%; padding: 50px 40px; background: #fafafa; overflow-y: auto; position: relative; }
         .section-label { font-family: var(--font-mono); font-size: 11px; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 30px; display: block; color: #000; letter-spacing: 0.1em; }
         
@@ -209,7 +243,6 @@
         }
         .opt-card:hover { border-color: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transform: translateY(-5px); z-index: 2; }
         
-        /* [Selection State] */
         .opt-card.selected { background: #000; color: #fff; border-color: #000; }
         .opt-card.selected .opt-type { color: #888; }
         .opt-card.selected .opt-desc { color: #ccc; }
@@ -220,7 +253,6 @@
         .opt-type { font-size: 11px; color: #666; margin-bottom: 25px; font-style: italic; }
         .opt-desc { font-size: 13px; line-height: 1.6; color: #444; font-weight: 300; }
         
-        /* Check Circle */
         .opt-check { 
             margin-top: auto; width: 24px; height: 24px; border: 1px solid #ccc; border-radius: 50%; align-self: flex-end; 
             display: flex; align-items: center; justify-content: center; opacity: 0.3; transition: 0.3s;
@@ -229,7 +261,6 @@
         .opt-card.selected .opt-check { border-color: #fff; opacity: 1; background: #fff; }
         .opt-card.selected .opt-check::after { content: ""; width: 8px; height: 8px; background: #000; border-radius: 50%; }
 
-        /* Floating Next Button */
         .btn-next-step {
             position: absolute; bottom: 30px; right: 40px;
             background: #000; color: #fff; padding: 12px 30px; font-size: 12px; font-weight: 600;
@@ -242,12 +273,11 @@
 
         /* [MODE C] DESIGN DIRECTION VIEW */
         .design-view { display: none; width: 100%; height: 100%; display: flex; }
-        .d-left { width: 40%; border-right: 1px solid #eee; padding: 50px; background: #fff; display: flex; flex-direction: column; }
-        .d-right { width: 60%; padding: 50px; background: #fafafa; overflow-y: auto; }
-        
-        .d-label { font-family: var(--font-mono); font-size: 10px; color: #999; margin-bottom: 10px; display: block; }
-        .d-title { font-size: 36px; font-weight: 300; line-height: 1.1; margin-bottom: 20px; }
-        .d-tags-wrap { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 40px; }
+        .d-left { width: 40%; padding: 50px 40px; display: flex; flex-direction: column; }
+        .d-right { width: 60%; padding: 50px 40px; background: #fafafa; overflow-y: auto; }
+        .d-label { font-family: var(--font-mono); font-size: 10px; color: #888; margin-bottom: 20px; display: block; letter-spacing: 0.1em; }
+        .d-title { font-size: 36px; font-weight: 400; line-height: 1.2; margin-bottom: 20px; }
+        .d-tags-wrap { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 50px; }
         .d-tag { border: 1px solid #ddd; padding: 5px 12px; font-size: 11px; border-radius: 20px; color: #555; }
         
         .spec-list { margin-top: 0; }
@@ -260,17 +290,98 @@
             border-top: 1px dashed #ccc; padding-top: 20px; line-height: 1.6; 
         }
 
-        /* Generic UI Elements */
         .cat-title { font-size: 10px; font-weight: 700; margin-bottom: 10px; display: block; border-bottom: 1px solid #000; padding-bottom: 5px; width: fit-content; margin-top: 25px; }
         .ex-btn { font-size: 11px; background: #fff; border: 1px solid #ddd; padding: 5px 10px; margin: 0 4px 6px 0; cursor: pointer; color: #666; }
         .btn-analyze { width: 100%; margin-top: auto; background: #000; color: #fff; padding: 12px; font-size: 12px; cursor: pointer; border: none; border-radius: 4px; }
         
         footer { padding: 60px 0; font-size: 12px; color: var(--sub); display: flex; justify-content: space-between; border-top: 1px solid var(--line); margin-top: 100px; }
+        
+        /* =========================================
+           모바일 뷰 모드 (새로 추가)
+           ========================================= */
+        body.mobile-view * { cursor: auto !important; }
+        body.mobile-view .cursor-dot,
+        body.mobile-view .cursor-ring { display: none !important; }
+        
+        body.mobile-view .container { padding: 0 20px; }
+        
+        body.mobile-view nav { 
+            top: 10px; 
+            width: 95%; 
+            height: 60px; 
+            padding: 0 20px; 
+        }
+        body.mobile-view .logo { font-size: 16px; }
+        body.mobile-view .logo svg { width: 22px; height: 22px; }
+        body.mobile-view .nav-right { gap: 15px; }
+        body.mobile-view .nav-links { display: none; }
+        body.mobile-view .lang-btn { font-size: 11px; padding: 5px 12px; }
+        
+        body.mobile-view section { padding: 100px 0; }
+        
+        body.mobile-view .def-wrapper { transform: translate(0, 30px); }
+        body.mobile-view .def-small { font-size: 14px; margin-bottom: 150px; top: 60px; }
+        
+        body.mobile-view .hero-sub { padding: 80px 0; min-height: auto; }
+        body.mobile-view .label { margin-bottom: 40px; }
+        body.mobile-view .phi-text { margin-bottom: 25px; }
+        
+        body.mobile-view .method-row { 
+            flex-direction: column; 
+            padding: 50px 0; 
+            gap: 30px; 
+        }
+        body.mobile-view .method-left { width: 100%; padding-top: 0; }
+        body.mobile-view .m-desc { margin-bottom: 20px; }
+        body.mobile-view .method-right { width: 100%; text-align: left; }
+        body.mobile-view .big-typo { justify-content: flex-start; }
+        
+        body.mobile-view .archive-track { gap: 20px; }
+        body.mobile-view .archive-card { min-width: 240px; height: 420px; padding: 25px; }
+        body.mobile-view .arc-project { font-size: 24px; }
+        body.mobile-view .arc-sub { font-size: 12px; }
+        body.mobile-view .arc-desc { font-size: 12px; }
+        
+        body.mobile-view .sb-frame { width: 95%; height: 90%; }
+        body.mobile-view .sb-bezel { height: 40px; padding: 0 15px; font-size: 10px; }
+        body.mobile-view .sb-sidebar { display: none; }
+        
+        body.mobile-view .interpret-view { flex-direction: column; }
+        body.mobile-view .col-essence { width: 100%; border-right: none; border-bottom: 1px solid #e0e0e0; padding: 30px 20px; }
+        body.mobile-view .brand-meta { font-size: 10px; margin-bottom: 20px; }
+        body.mobile-view .essence-text { font-size: 16px; }
+        body.mobile-view .core-question { margin-top: 30px; font-size: 12px; }
+        
+        body.mobile-view .col-possibility { width: 100%; padding: 30px 20px; }
+        body.mobile-view .section-label { font-size: 10px; }
+        body.mobile-view .options-grid { grid-template-columns: 1fr; gap: 15px; padding-bottom: 80px; }
+        body.mobile-view .opt-card { height: auto; min-height: 250px; padding: 20px; }
+        body.mobile-view .opt-name { font-size: 18px; }
+        
+        body.mobile-view .btn-next-step { bottom: 20px; right: 20px; }
+        
+        body.mobile-view .design-view { flex-direction: column; }
+        body.mobile-view .d-left { width: 100%; padding: 30px 20px; }
+        body.mobile-view .d-right { width: 100%; padding: 30px 20px; }
+        body.mobile-view .d-title { font-size: 28px; }
+        
+        body.mobile-view footer { flex-direction: column; gap: 10px; padding: 40px 0; font-size: 11px; }
     </style>
 </head>
 <body>
     <div class="cursor-dot"></div>
     <div class="cursor-ring"></div>
+
+    <!-- View Toggle Button -->
+    <button class="view-toggle-btn" id="viewToggle" onclick="toggleView()">
+        <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span id="viewText">Mobile View</span>
+    </button>
 
     <nav>
         <div class="logo" onclick="location.reload()">
@@ -298,50 +409,39 @@
 
         <div class="container">
             <section class="hero-sub">
-                <h1 class="hero-title">
-                    <span class="reveal" id="heroText1">당신의 이야기가</span><br>
-                    <span class="reveal" id="heroText2" style="transition-delay: 0.2s;">가장 강력한 물성이 될 때.</span>
-                </h1>
+                <h1 class="hero-title reveal">What defines<br>your essence?</h1>
             </section>
 
             <section id="philosophy">
-                <span class="label typing-target" data-text="Our Core"></span>
-                <div class="phi-text reveal" id="phiText">"재료가 가진 본래의 성질을 방해하지 않는 것."</div>
-                <div class="phi-desc reveal" id="phiDesc">우리는 외부에서 유행하는 아이템을 가져오는 것이 아니라, 당신 내면의 원초적인 경험과 성질을 추출하여 세상에 단 하나뿐인 비즈니스의 물성으로 치환합니다.</div>
+                <span class="label typing-target" data-text="Philosophy of Aletheia"></span>
+                <p class="phi-text reveal">단순한 '무엇'을 만드는 것이 아닙니다.<br>우리는 '왜', '누구를 위해', '어떻게'를 질문합니다.</p>
+                <p class="phi-desc reveal">브랜드의 핵심 본질을 찾고, 불필요한 장식을 걷어내고, 사람들이 진정 필요로 하는 경험의 원형을 디자인합니다. 감각적 작업, 논리적 분석, 공감 기반의 협업으로 결과를 완성합니다.</p>
             </section>
 
             <section id="method">
-                <span class="label typing-target" data-text="The Method"></span>
+                <span class="label typing-target" data-text="Our Method"></span>
                 <div class="method-list">
                     <div class="method-row reveal">
                         <div class="method-left">
-                            <span class="m-num">/0.1</span>
-                            <p class="m-desc"><strong>Unmasking</strong><br>사회적 페르소나를 덜어내고, 경험의 원형만을 드러냅니다.</p>
-                            <button class="m-btn" onclick="openBoard('unmask')">Start Analysis</button>
-                        </div>
-                        <div class="method-right"><div class="big-typo">UNMASK</div></div>
-                    </div>
-                    <div class="method-row reveal">
-                        <div class="method-left">
-                            <span class="m-num">/0.2</span>
-                            <p class="m-desc"><strong>Interpretation</strong><br>브랜드가 스스로 말해온 관계를 해석하고, 선택 가능한 가능성을 엽니다.</p>
-                            <button class="m-btn" onclick="openBoard('interpret')">Start Analysis</button>
+                            <div class="m-num">STEP 01</div>
+                            <div class="m-desc">브랜드의 진짜 이야기를 찾습니다. 현상 너머의 본질, 기억 속 핵심 감각, 관계의 근원을 탐구합니다.</div>
+                            <button class="m-btn" onclick="openBoard('standard')">Details</button>
                         </div>
                         <div class="method-right"><div class="big-typo">INTERPRET</div></div>
                     </div>
                     <div class="method-row reveal">
                         <div class="method-left">
-                            <span class="m-num">/0.3</span>
-                            <p class="m-desc"><strong>Mapping</strong><br>전략을 제시하지 않고, 선택 가능한 지형을 구조화합니다.</p>
-                            <button class="m-btn" onclick="openBoard('map')">Start Analysis</button>
+                            <div class="m-num">STEP 02</div>
+                            <div class="m-desc">발견한 본질을 구체적인 형태로 전환합니다. 타겟이 공감할 수 있는 물질과 경험의 언어로 번역합니다.</div>
+                            <button class="m-btn" onclick="openBoard('interpret')">Case Study</button>
                         </div>
-                        <div class="method-right"><div class="big-typo">MAP</div></div>
+                        <div class="method-right"><div class="big-typo">TRANSLATE</div></div>
                     </div>
                     <div class="method-row reveal">
                         <div class="method-left">
-                            <span class="m-num">/0.4</span>
-                            <p class="m-desc"><strong>Co-Solving</strong><br>우리는 해결하지 않습니다. 다만 함께 탐구합니다.</p>
-                            <button class="m-btn" onclick="openBoard('cosolve')">Start Analysis</button>
+                            <div class="m-num">STEP 03</div>
+                            <div class="m-desc">고객과 함께 결과물을 개선하고 완성합니다. 일방적 제안이 아닌 공동 창작을 지향합니다.</div>
+                            <button class="m-btn" onclick="alert('Co-creation Process')">Learn More</button>
                         </div>
                         <div class="method-right"><div class="big-typo">CO-SOLVE</div></div>
                     </div>
@@ -490,6 +590,22 @@
     </div>
 
     <script>
+        // VIEW TOGGLE FUNCTION
+        let isMobileView = false;
+        function toggleView() {
+            isMobileView = !isMobileView;
+            const body = document.body;
+            const viewText = document.getElementById('viewText');
+            
+            if (isMobileView) {
+                body.classList.add('mobile-view');
+                viewText.textContent = 'Desktop View';
+            } else {
+                body.classList.remove('mobile-view');
+                viewText.textContent = 'Mobile View';
+            }
+        }
+
         // 1. CURSOR
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorRing = document.querySelector('.cursor-ring');
@@ -519,21 +635,19 @@
             row.addEventListener('mouseleave', () => { row.querySelectorAll('.char').forEach(c => c.style.transform = 'translateX(0)'); });
         });
 
-       // 3. OBSERVERS (Re-typing Effect Update)
+       // 3. OBSERVERS
         const revealObserver = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); }); }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
         
         const typingObserver = new IntersectionObserver((entries) => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
-                    // 화면에 들어왔을 때: 클래스가 없으면 타이핑 시작
                     if (!e.target.classList.contains('typing-active')) {
                         e.target.classList.add('typing-active');
                         const text = e.target.getAttribute('data-text'); 
                         e.target.innerText = "";
                         let i = 0; 
                         function type() { 
-                            // typing-active 클래스가 있을 때만 실행 (도중에 나가면 멈춤)
                             if(i < text.length && e.target.classList.contains('typing-active')) { 
                                 e.target.innerText += text.charAt(i); 
                                 i++; 
@@ -543,19 +657,16 @@
                         type();
                     }
                 } else {
-                    // [수정됨] 화면 밖으로 나가면: 클래스 제거하고 텍스트 초기화 (리셋)
                     e.target.classList.remove('typing-active');
                     e.target.innerText = ""; 
                 }
             });
-        }, { threshold: 0.5 }); // 감도 조절
+        }, { threshold: 0.5 });
         document.querySelectorAll('.typing-target').forEach(el => typingObserver.observe(el));
 
         // 4. MODAL LOGIC
         const boardPage = document.getElementById('boardPage');
         const boardTitle = document.querySelector('.board-title');
-        
-        // Views
         const viewStd = document.getElementById('mode-standard');
         const viewInt = document.getElementById('mode-interpret');
         const viewDes = document.getElementById('mode-design');
@@ -565,7 +676,6 @@
             setTimeout(() => boardPage.classList.add('show'), 10);
             document.body.style.overflow = 'hidden';
 
-            // Reset views
             viewStd.style.display = 'none';
             viewInt.style.display = 'none';
             viewDes.style.display = 'none';
@@ -584,14 +694,12 @@
             setTimeout(() => { boardPage.style.display = 'none'; document.body.style.overflow = 'auto'; }, 500);
         }
 
-        // Selection Logic
         let selectedData = null;
         function selectCard(el, key) {
             document.querySelectorAll('.opt-card').forEach(c => c.classList.remove('selected'));
             el.classList.add('selected');
             document.querySelector('.btn-next-step').classList.add('active');
             
-            // Simulating Data Selection
             const dataMap = {
                 'opt1': { title:'Low-pressure Record Tool', mood:'Silence, Relief', mat:'Recycled Paper (80g)', col:'#F0F0F0, #222', form:'A6 Mini Notebook', method:'Exposed Spine Binding' },
                 'opt2': { title:'Non-writing Memory Object', mood:'Abstract, Time', mat:'Aluminum, Stone', col:'#Silver, #Gray', form:'Desk Object', method:'CNC Milling' },
@@ -607,7 +715,6 @@
             viewDes.style.display = 'flex';
             boardTitle.innerText = 'DESIGN DIRECTION';
             
-            // Bind Data
             if(selectedData) {
                 document.getElementById('dTitle').innerText = selectedData.title;
                 document.getElementById('dMood').innerText = selectedData.mood;
@@ -623,17 +730,16 @@
             }
         }
 
-       // 5. CANVAS LOGIC (Zoom Update)
+       // 5. CANVAS LOGIC
         const canvasWrapper = document.getElementById('canvasWrapper');
         const canvas = document.getElementById('canvas');
         const wordInput = document.getElementById('wordInput');
         let scale = 1, translateX = 0, translateY = 0, chips = [];
         
-        // [수정됨] Ctrl 키 없이 휠만 굴려도 줌인/줌아웃 되도록 변경
         canvasWrapper.addEventListener('wheel', (e) => {
-            e.preventDefault(); // 페이지 스크롤 방지
+            e.preventDefault();
             scale += e.deltaY * -0.001; 
-            scale = Math.min(Math.max(0.5, scale), 3); // 최소 0.5배 ~ 최대 3배
+            scale = Math.min(Math.max(0.5, scale), 3);
             canvas.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`; 
         });
 
@@ -649,11 +755,10 @@
             canvas.appendChild(chip); chips.push(chip);
         }
 
-       // 6. THREE.JS (Architectural Wireframe Core)
+       // 6. THREE.JS
         (function() {
             const container = document.getElementById('canvas-container'); if(!container) return;
             
-            // [1] Setup
             const scene = new THREE.Scene(); 
             scene.background = new THREE.Color(0xffffff); 
             scene.fog = new THREE.FogExp2(0xffffff, 0.002);
@@ -668,7 +773,6 @@
             renderer.outputEncoding = THREE.sRGBEncoding;
             container.appendChild(renderer.domElement);
 
-            // [2] Crisp Texture (입자 텍스처)
             function createCrispTexture() {
                 const size = 128; 
                 const canvas = document.createElement('canvas');
@@ -687,29 +791,24 @@
                 return new THREE.CanvasTexture(canvas);
             }
 
-           // [3] The Architectural Core (크고 선명한 와이어프레임)
             const coreGroup = new THREE.Group(); 
             scene.add(coreGroup);
             
-            // [수정됨] 크기 3.5 -> 3.8로 키움 / 디테일 5 유지
             const coreGeo = new THREE.IcosahedronGeometry(3.8, 5); 
-            
             const coreMat = new THREE.MeshBasicMaterial({ 
-                color: 0x000000,    // [수정됨] 완전한 블랙
+                color: 0x000000,
                 wireframe: true,    
                 transparent: true, 
-                opacity: 0.3,       // [수정됨] 0.15 -> 0.3 (선을 훨씬 선명하게)
+                opacity: 0.3,
             });
             const coreMesh = new THREE.Mesh(coreGeo, coreMat); 
             coreGroup.add(coreMesh);
 
-            // 외곽 궤도도 비율에 맞춰 살짝 키움 (4.5 -> 5.0)
             const outerGeo = new THREE.IcosahedronGeometry(5.0, 2);
             const outerMat = new THREE.MeshBasicMaterial({ color: 0x555555, wireframe: true, transparent: true, opacity: 0.1 });
             const outerMesh = new THREE.Mesh(outerGeo, outerMat);
             coreGroup.add(outerMesh);
 
-            // [4] Particles (이전과 동일한 고급스러운 분포)
             const pGeo = new THREE.BufferGeometry(); 
             const pCount = 28000; 
             const pPos = new Float32Array(pCount*3); 
@@ -749,7 +848,6 @@
             const pMesh = new THREE.Points(pGeo, pMat); 
             scene.add(pMesh);
 
-            // [5] Lighting & Post Processing
             const ambientLight = new THREE.AmbientLight(0xffffff, 1.5); scene.add(ambientLight);
             const dirLight = new THREE.DirectionalLight(0xffffff, 2);
             dirLight.position.set(50, 50, 50);
@@ -760,7 +858,6 @@
             const bloom = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.1, 0.5, 0.98); 
             composer.addPass(bloom);
 
-            // [6] Animation Loop
             let time = 0;
             let mouseX = 0, mouseY = 0;
             const wHalfX = window.innerWidth/2; const wHalfY = window.innerHeight/2;
@@ -786,7 +883,6 @@
                 pMesh.rotation.y += 0.0001 + targetRotY; 
                 pMesh.rotation.x += targetRotX;
                 
-                // 코어 회전: 아주 천천히 돌면서 구조미를 보여줌
                 coreGroup.rotation.y -= 0.0005; 
                 coreGroup.rotation.x += 0.0002;
 
