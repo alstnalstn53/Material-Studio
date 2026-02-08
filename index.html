@@ -1716,29 +1716,26 @@ nav {
 .btn-mobile-toggle {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   background: transparent;
-  font-size: 12px;
-  font-weight: 400;
-  color: #555;
   cursor: pointer;
   transition: all 0.25s;
-  font-family: inherit;
   flex-shrink: 0;
 }
 
 .btn-mobile-toggle:hover {
-  background: rgba(0, 0, 0, 0.03);
-  border-color: rgba(0, 0, 0, 0.18);
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
 .btn-mobile-toggle svg {
-  width: 14px;
-  height: 14px;
-  stroke: currentColor;
+  width: 15px;
+  height: 15px;
+  stroke: #555;
   fill: none;
   stroke-width: 1.5;
 }
@@ -1746,7 +1743,10 @@ nav {
 .btn-mobile-toggle.active {
   background: #000;
   border-color: #000;
-  color: #fff;
+}
+
+.btn-mobile-toggle.active svg {
+  stroke: #fff;
 }
 
 /* ============================================
@@ -1861,14 +1861,12 @@ body.mobile-mode .mobile-drawer { width: 280px; }
     <li data-room="archive">ARCHIVE</li>
   </ul>
 
-  <!-- Mobile View Toggle (desktop only) -->
-  <button class="btn-mobile-toggle" id="btnMobileToggle" title="모바일 보기">
-    <svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
-    <span class="mobile-toggle-label">Mobile</span>
-  </button>
-
   <!-- Auth Area -->
   <div class="nav-auth">
+    <button class="btn-mobile-toggle" id="btnMobileToggle" title="모바일 보기">
+      <svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+    </button>
+
     <button class="btn-signin" id="btnSignIn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/></svg>
       <span>Sign in</span>
@@ -2606,21 +2604,17 @@ body.mobile-mode .mobile-drawer { width: 280px; }
      7b. MOBILE VIEW TOGGLE
      ========================================== */
   var mobileToggleBtn = document.getElementById('btnMobileToggle');
-  var mobileToggleLabel = mobileToggleBtn.querySelector('.mobile-toggle-label');
   var isMobileMode = false;
 
   mobileToggleBtn.addEventListener('click', function () {
     isMobileMode = !isMobileMode;
     document.body.classList.toggle('mobile-mode', isMobileMode);
     mobileToggleBtn.classList.toggle('active', isMobileMode);
-    mobileToggleLabel.textContent = isMobileMode ? 'Desktop' : 'Mobile';
 
-    // Update the phone/desktop icon
-    if (isMobileMode) {
-      mobileToggleBtn.querySelector('svg').innerHTML = '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>';
-    } else {
-      mobileToggleBtn.querySelector('svg').innerHTML = '<rect x="7" y="2" width="10" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/>';
-    }
+    // Switch icon: phone ↔ desktop
+    mobileToggleBtn.querySelector('svg').innerHTML = isMobileMode
+      ? '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>'
+      : '<rect x="7" y="2" width="10" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/>';
   });
 
 
